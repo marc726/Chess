@@ -9,6 +9,7 @@ public class PlayChess {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
 		Chess.start();
+		printBoard(getCurrentBoardState());
 		
 		String line = sc.nextLine();
 		while (!line.equals("quit")) {
@@ -77,5 +78,8 @@ public class PlayChess {
 			board[8-rp.pieceRank][file] = ppstr;
 		}	
 	}
-	
+	static ArrayList<ReturnPiece> getCurrentBoardState() {
+
+		return Chess.board;
+	}
 }
