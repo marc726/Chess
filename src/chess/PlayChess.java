@@ -80,6 +80,6 @@ public class PlayChess {
 	}
 	static ArrayList<ReturnPiece> getCurrentBoardState() {
 
-		return Chess.boardState;
+		return Chess.board;
 	}
 }
