@@ -37,6 +37,8 @@ class ReturnPlay {
 public class Chess {
 	
 	enum Player { white, black }
+
+	public static ArrayList<ReturnPiece> boardState; //declare board
 	
 	/**
 	 * Plays the next move for whichever player has the turn.
@@ -62,6 +64,8 @@ public class Chess {
 	 */
 	public static void start() {
 		/* FILL IN THIS METHOD */
+		boardState = new ArrayList<>(); 
+
 	}
 }
 
