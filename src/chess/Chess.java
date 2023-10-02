@@ -55,14 +55,39 @@ public class Chess {
 	 */
 	public static ReturnPlay play(String move) {
 
+
 		/* FILL IN THIS METHOD */
+
+		String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
+    	String moveTo = move.substring(3, 5);
 		
-		/* FOLLOWING LINE IS A PLACEHOLDER TO MAKE COMPILER HAPPY */
-		/* WHEN YOU FILL IN THIS METHOD, YOU NEED TO RETURN A ReturnPlay OBJECT */
-		return null;
+		// We need a legality check here
+
+		ReturnPlay playerMove = new ReturnPlay();
+		playerMove.piecesOnBoard = new ArrayList<>(board);
+		ReturnPiece movingPiece = getPieceAt(moveFrom);
+
+		movePiece(movingPiece, moveTo);
+		
+		return playerMove;
+	}
+
+	private static ReturnPiece getPieceAt(String position) {
+		for (ReturnPiece piece : board) {
+			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { //check if moveFrom == returnPiece.location (file + rank)
+				return piece;
+			}
+		}
+		return null; 
 	}
 	
-	
+	private static void movePiece(ReturnPiece piece, String moveTo) {
+		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
+		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
+	}
+
+
+
 	/**
 	 * This method should reset the game, and start from scratch.
 	 */
