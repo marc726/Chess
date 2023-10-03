@@ -52,7 +52,7 @@ public class LegalCheck {
         //One Square Forward - Reg Pawn
         if (startFile == endFile && endRank == startRank + direction) {
             //check oif destination square is empty
-            if (!isSquareOccupied(end, board)) {
+            if (!isSquareOccupied(end, Chess.board)) {
                 return true;
             }
         }
@@ -61,14 +61,14 @@ public class LegalCheck {
         if (startFile == endFile && endRank == startRank + 2 * direction) {
             // Check if both the destination square and the square in between are empty
             String intermediateSquare = String.valueOf(startFile) + (startRank + direction);
-            if (!isSquareOccupied(intermediateSquare, board) && !isSquareOccupied(end, board)) {
+            if (!isSquareOccupied(intermediateSquare, Chess.board) && !isSquareOccupied(end, Chess.board)) {
                 return true;
             }
         }
             // Pawn capturing moves: diagonal
         if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
             // Check if the destination square contains an opponent's piece
-            if (isSquareOccupiedByOpponent(end, board, pawn.pieceType)) {
+            if (isSquareOccupiedByOpponent(end, Chess.board, pawn.pieceType)) {
                 return true;
             }
         }
@@ -78,8 +78,12 @@ public class LegalCheck {
         // Helper methods
 
         private static boolean isSquareOccupied(String position, ArrayList<ReturnPiece> board) {
-            // Implement logic to check if the square at the specified position is occupied
-            // Return true if occupied, otherwise return false
+            for (ReturnPiece piece : board){
+              if (piece.pieceFile.name() + piece.pieceRank == position){
+                return true;
+              }
+            }
+          return false;
         }
 
         private static boolean isPathClear(String start, String end, ArrayList<ReturnPiece> board) {
