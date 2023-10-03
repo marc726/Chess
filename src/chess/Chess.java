@@ -57,25 +57,41 @@ public class Chess {
 
 		
 		// Check if the input format is valid after checking for "resign, reset, etc."
-		if (!isValidInputFormat(move)) {
-			// Handle the error
-			ReturnPlay invalidMove = new ReturnPlay();
-			invalidMove.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			return invalidMove;
+		if (InputValidation.inputCheck(move) == false){ //input isn't valid
+			ReturnPlay result = new ReturnPlay();
+			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			return result;
+		}else{ //input is either, resign, reset, or valid piece move
+			switch(move.toLowerCase().trim()) {
+				case "reset":
+					start();
+				case "resign":
+					ReturnPlay resignResult = new ReturnPlay();
+					if(currentPlayer == Player.white) {
+						resignResult.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
+					} else {
+						resignResult.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
+					}
+					return resignResult; // return winning color
+				case "draw":
+					ReturnPlay drawResult = new ReturnPlay();
+					drawResult.message = ReturnPlay.Message.DRAW;
+					return drawResult;
+				default:// return moving piece
+				String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
+				String moveTo = move.substring(3, 5);
+				
+				// We need a legality check here
+
+				ReturnPlay playerMove = new ReturnPlay();
+				playerMove.piecesOnBoard = new ArrayList<>(board);
+				ReturnPiece movingPiece = getPieceAt(moveFrom);
+
+				movePiece(movingPiece, moveTo);
+
+				return playerMove;
+			}
 		}
-
-		String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
-    	String moveTo = move.substring(3, 5);
-		
-		// We need a legality check here
-
-		ReturnPlay playerMove = new ReturnPlay();
-		playerMove.piecesOnBoard = new ArrayList<>(board);
-		ReturnPiece movingPiece = getPieceAt(moveFrom);
-
-		movePiece(movingPiece, moveTo);
-		
-		return playerMove;
 	}
 
 	/**
@@ -120,12 +136,7 @@ public class Chess {
 		board.add(piece);
 	}
 
-
 	//helper methods 
-
-	private static boolean isValidInputFormat(String input) {
-		return input.matches("^[a-h][1-8] [a-h][1-8]$");
-	}
 
 	private static ReturnPiece getPieceAt(String position) {
 		for (ReturnPiece piece : board) {
