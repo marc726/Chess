@@ -55,7 +55,8 @@ public class Chess {
 	 */
 	public static ReturnPlay play(String move) {
 
-		// Check if the input format is valid
+		
+		// Check if the input format is valid after checking for "resign, reset, etc."
 		if (!isValidInputFormat(move)) {
 			// Handle the error
 			ReturnPlay invalidMove = new ReturnPlay();
