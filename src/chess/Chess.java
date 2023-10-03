@@ -55,8 +55,13 @@ public class Chess {
 	 */
 	public static ReturnPlay play(String move) {
 
-
-		/* FILL IN THIS METHOD */
+		// Check if the input format is valid
+		if (!isValidInputFormat(move)) {
+			// Handle the error
+			ReturnPlay invalidMove = new ReturnPlay();
+			invalidMove.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			return invalidMove;
+		}
 
 		String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
     	String moveTo = move.substring(3, 5);
@@ -72,27 +77,11 @@ public class Chess {
 		return playerMove;
 	}
 
-	private static ReturnPiece getPieceAt(String position) {
-		for (ReturnPiece piece : board) {
-			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { //check if moveFrom == returnPiece.location (file + rank)
-				return piece;
-			}
-		}
-		return null; 
-	}
-	
-	private static void movePiece(ReturnPiece piece, String moveTo) {
-		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
-		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
-	}
-
-
-
 	/**
 	 * This method should reset the game, and start from scratch.
 	 */
 	public static void start() {
-		/* FILL IN THIS METHOD */
+
 		board = new ArrayList<>(); 
 		currentPlayer = Player.white;
 
@@ -128,6 +117,27 @@ public class Chess {
 		piece.pieceFile = file;
 		piece.pieceRank = rank;
 		board.add(piece);
+	}
+
+
+	//helper methods 
+
+	private static boolean isValidInputFormat(String input) {
+		return input.matches("^[a-h][1-8] [a-h][1-8]$");
+	}
+
+	private static ReturnPiece getPieceAt(String position) {
+		for (ReturnPiece piece : board) {
+			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { //check if moveFrom == returnPiece.location (file + rank)
+				return piece;
+			}
+		}
+		return null; 
+	}
+	
+	private static void movePiece(ReturnPiece piece, String moveTo) {
+		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
+		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
 	}
 }
 
