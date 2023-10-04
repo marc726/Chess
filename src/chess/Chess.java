@@ -127,6 +127,8 @@ public class Chess {
 			addToBoard(PieceType.WP, file, 2);
 			addToBoard(PieceType.BP, file, 7);
 		}
+
+		PlayChess.printBoard(PlayChess.getCurrentBoardState());
 	}
 	private static void addToBoard(PieceType type, PieceFile file, int rank){
 		ReturnPiece piece = new ReturnPiece();
