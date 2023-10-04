@@ -59,24 +59,29 @@ public class Chess {
     	result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
 		
 		// Check if the input format is valid after checking for "resign, reset, etc."
-		if (InputValidation.inputCheck(move) == false){ //input isn't valid
+		
+		//input isn't valid
+		if (InputValidation.inputCheck(move) == false){ 
 			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-		}else{ //input is either, resign, reset, or valid piece move
+		}else{ 
+			//input is either, resign, reset, or valid piece move
 			switch(move.toLowerCase().trim()) {
 				case "reset":
 					start();
 					break;
-				case "resign":
-					if(currentPlayer == Player.white) {
+				case "resign": 
+					if(currentPlayer == Player.white) { // set winning color
 						result.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
 					} else {
 						result.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
 					}
-					break; // set winning color
+					break; 
 				case "draw":
 					result.message = ReturnPlay.Message.DRAW;
 					break;
-				default:// return moving piece
+				default: 
+				
+				//make move
 				String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
 				String moveTo = move.substring(3, 5);
 				
@@ -103,7 +108,7 @@ public class Chess {
 		board = new ArrayList<>(); 
 		currentPlayer = Player.white;
 
-		//white special pieces
+		//special pieces
 		addToBoard(PieceType.WR, PieceFile.a, 1); //file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
 		addToBoard(PieceType.WN, PieceFile.b, 1);
 		addToBoard(PieceType.WB, PieceFile.c, 1);
@@ -113,7 +118,6 @@ public class Chess {
 		addToBoard(PieceType.WN, PieceFile.g, 1);
 		addToBoard(PieceType.WR, PieceFile.h, 1);
 
-		//black special pieces
 		addToBoard(PieceType.BR, PieceFile.a, 8);
 		addToBoard(PieceType.BN, PieceFile.b, 8);
 		addToBoard(PieceType.BB, PieceFile.c, 8);
