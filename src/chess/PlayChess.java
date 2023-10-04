@@ -10,6 +10,7 @@ public class PlayChess {
 		Scanner sc = new Scanner(System.in);
 		Chess.start();
 		
+		
 		String line = sc.nextLine();
 		while (!line.equals("quit")) {
 			if (line.equals("reset")) {

@@ -55,43 +55,44 @@ public class Chess {
 	 */
 	public static ReturnPlay play(String move) {
 
+		ReturnPlay result = new ReturnPlay();
+    	result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
 		
 		// Check if the input format is valid after checking for "resign, reset, etc."
 		if (InputValidation.inputCheck(move) == false){ //input isn't valid
-			ReturnPlay result = new ReturnPlay();
 			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			return result;
 		}else{ //input is either, resign, reset, or valid piece move
 			switch(move.toLowerCase().trim()) {
 				case "reset":
 					start();
+					break;
 				case "resign":
-					ReturnPlay resignResult = new ReturnPlay();
 					if(currentPlayer == Player.white) {
-						resignResult.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
+						result.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
 					} else {
-						resignResult.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
+						result.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
 					}
-					return resignResult; // return winning color
+					break; // set winning color
 				case "draw":
-					ReturnPlay drawResult = new ReturnPlay();
-					drawResult.message = ReturnPlay.Message.DRAW;
-					return drawResult;
+					result.message = ReturnPlay.Message.DRAW;
+					break;
 				default:// return moving piece
 				String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
 				String moveTo = move.substring(3, 5);
 				
 				// We need a legality check here
 
-				ReturnPlay playerMove = new ReturnPlay();
-				playerMove.piecesOnBoard = new ArrayList<>(board);
 				ReturnPiece movingPiece = getPieceAt(moveFrom);
-
-				movePiece(movingPiece, moveTo);
-
-				return playerMove;
+                if (movingPiece == null) { 
+                    result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+                }else{
+					movePiece(movingPiece, moveTo);
+				}
+				break;
 			}
 		}
+
+		return result;
 	}
 
 	/**
