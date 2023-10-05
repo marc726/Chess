@@ -37,6 +37,15 @@ class ReturnPlay { //DO NOT ADD, DELETE, MODIFY
 	Message message;
 }
 
+class ExtendedReturnPiece extends ReturnPiece { 
+	enum PieceColor {WHITE, BLACK};
+	PieceColor pieceColor;
+
+	public String toString() {
+		return super.toString() + ":" + pieceColor;
+	}
+}
+
 public class Chess {
 	
 	enum Player { white, black } //DO NOT CHANGE
