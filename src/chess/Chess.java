@@ -87,16 +87,17 @@ public class Chess {
 				
 				// We need a legality check here
 
+				//check if space is empty
+
 				ReturnPiece movingPiece = getPieceAt(moveFrom);
-                if (movingPiece == null) { 
+                if (LegalCheck.isLegalMove(move, board) == false) {  //requires move logic to be valid to work
                     result.message = ReturnPlay.Message.ILLEGAL_MOVE;
                 }else{
-					movePiece(movingPiece, moveTo);
+					movePiece(movingPiece, moveTo); // ~barebones implementation to move piece~
 				}
 				break;
 			}
 		}
-
 		return result;
 	}
 
@@ -108,8 +109,8 @@ public class Chess {
 		board = new ArrayList<>(); 
 		currentPlayer = Player.white;
 
-		//special pieces
-		addToBoard(PieceType.WR, PieceFile.a, 1); //file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
+		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
+		addToBoard(PieceType.WR, PieceFile.a, 1); 
 		addToBoard(PieceType.WN, PieceFile.b, 1);
 		addToBoard(PieceType.WB, PieceFile.c, 1);
 		addToBoard(PieceType.WQ, PieceFile.d, 1);
@@ -134,6 +135,7 @@ public class Chess {
 		}
 
 		PlayChess.printBoard(PlayChess.getCurrentBoardState());
+
 	}
 	private static void addToBoard(PieceType type, PieceFile file, int rank){
 		ReturnPiece piece = new ReturnPiece();
