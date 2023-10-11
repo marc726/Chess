@@ -64,6 +64,7 @@ public class LegalCheck {
     if (startFile == endFile && endRank == startRank + direction) {
       // check oif destination square is empty
       if (!isSquareOccupied(end, board)) {
+        System.out.println("One Square Forward");
         return true;
       }
     }
@@ -178,12 +179,12 @@ public class LegalCheck {
 
   private static boolean isSquareOccupied(String position, ArrayList<ReturnPiece> board) {
     for (ReturnPiece piece : board) {
-      if (piece.pieceFile.name() + piece.pieceRank == position) {
+      if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) {
         return true;
       }
     }
     return false;
-  }
+}
 
   private static boolean isSquareOccupiedBySameColor(String square, ArrayList<ReturnPiece> board,
       ReturnPiece.PieceType pieceType) {
