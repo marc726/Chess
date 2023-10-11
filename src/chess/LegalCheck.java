@@ -98,7 +98,7 @@ public class LegalCheck {
       // if theres a piece in the way
       if (isPathClear(start, end, board)) {
         // check of destination square is empty
-        if (!isSquareOccupiedBySameColor(end, board, rook.pieceColor)) {
+        if (!isSquareOccupiedBySameColor(end, board, rook.pieceType)) {
           return true;
         }
       }
@@ -118,7 +118,7 @@ public class LegalCheck {
     int rankDiff = Math.abs(startRank - endRank);
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
       // check if destination square is empty
-      if (!isSquareOccupiedBySameColor(end, board, knight.pieceColor)) {
+      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType)) {
         return true;
       }
     }
@@ -137,7 +137,7 @@ public class LegalCheck {
       // if piece in the way
       if (isPathClear(start, end, board)) {
         // check if destination square is empty
-        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceColor)) {
+        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType)) {
           return true;
         }
       }
@@ -166,7 +166,7 @@ public class LegalCheck {
     int rankDiff = Math.abs(startRank - endRank);
     if (fileDiff <= 1 && rankDiff <= 1) {
       // dest is empty
-      if (!isSquareOccupiedBySameColor(end, board, king.pieceColor)) {
+      if (!isSquareOccupiedBySameColor(end, board, king.pieceType)) {
         return true;
       }
     }
@@ -185,9 +185,9 @@ public class LegalCheck {
   }
 
   private static boolean isSquareOccupiedBySameColor(String square, ArrayList<ReturnPiece> board,
-      ReturnPiece.PieceColor color) {
+      ReturnPiece.PieceType pieceType) {
     for (ReturnPiece piece : board) {
-      if (piece.pieceFile.name() + piece.pieceRank.equals(square) && piece.pieceColor == color) {
+      if (square.equals(piece.pieceFile.name() + piece.pieceRank) && piece.pieceType == pieceType) {
         return true;
       }
     }
@@ -253,7 +253,7 @@ public class LegalCheck {
     }
 
     // diagonal
-
+    return true;
   }
 
 }
