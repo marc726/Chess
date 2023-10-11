@@ -20,6 +20,7 @@ public class LegalCheck {
     }
 
     // Check if move is legal for that piece
+    
     if (movingPiece != null) {
       switch (movingPiece.pieceType) {
         case WP:
