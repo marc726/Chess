@@ -13,7 +13,7 @@ public class LegalCheck {
     // Get piece that is moving
     ReturnPiece movingPiece = null;
     for (ReturnPiece piece : board) {
-      if (piece.pieceFile.name() + piece.pieceRank == startPos) {
+      if ((piece.pieceFile.name() + piece.pieceRank).equals(startPos)) {
         movingPiece = piece;
         break;
       }
