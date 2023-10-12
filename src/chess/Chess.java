@@ -41,117 +41,106 @@ public class Chess {
 	
 	enum Player { white, black } //DO NOT CHANGE
 
-	public static ArrayList<ReturnPiece> board; //create board 
-	public static Player currentPlayer; // create the current player
-	
-	/**
-	 * Plays the next move for whichever player has the turn.
-	 * 
-	 * @param move String for next move, e.g. "a2 a3"
-	 * 
-	 * @return A ReturnPlay instance that contains the result of the move.
-	 *         See the section "The Chess class" in the assignment description for details of
-	 *         the contents of the returned ReturnPlay instance.
-	 */
-	public static ReturnPlay play(String move) {
-
-		ReturnPlay result = new ReturnPlay();
-    	result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
+		public static ArrayList<ReturnPiece> board; //create board 
+		public static Player currentPlayer; // create the current player
 		
-		// Check if the input format is valid after checking for "resign, reset, etc."
+		/**
+		 * Plays the next move for whichever player has the turn.
+		 * 
+		 * @param move String for next move, e.g. "a2 a3"
+		 * 
+		 * @return A ReturnPlay instance that contains the result of the move.
+		 *         See the section "The Chess class" in the assignment description for details of
+		 *         the contents of the returned ReturnPlay instance.
+		 */
+		public static ReturnPlay play(String move) {
 
-		//check if first move is White's move
-		if (currentPlayer != Player.white) {
-			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			ReturnPlay result = new ReturnPlay();
+			result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
+
+			// Check if the input format is valid after checking for "resign, reset, etc."
+			if (!InputValidation.inputCheck(move)) {
+				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				return result;
+			}
+
+			// Check if it's the first move (white move)
+			if (currentPlayer == Player.white) {
+				String moveFrom = move.substring(0, 2);
+				String moveTo = move.substring(3, 5);
+				ReturnPiece movingPiece = getPieceAt(moveFrom);
+				if (movingPiece != null && isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
+					movePiece(movingPiece, moveTo);
+					currentPlayer = Player.black; // Switch player
+				} else {
+					result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				}
+			} else if (currentPlayer == Player.black) {
+				// Check if the input move is valid for black
+				if (!isWhiteMove(move)) {
+					String moveFrom = move.substring(0, 2);
+					String moveTo = move.substring(3, 5);
+					ReturnPiece movingPiece = getPieceAt(moveFrom);
+					if (LegalCheck.isLegalMove(move, board)) {
+						movePiece(movingPiece, moveTo);
+						currentPlayer = Player.white; // Switch player
+					} else {
+						result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+					}
+				} else {
+					result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+				}
+			} else {
+				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			}
+		
 			return result;
 		}
-		
-		//input isn't valid
-		if (!InputValidation.inputCheck(move)){ 
-			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-		}else{ 
-			//input is either, resign, reset, or valid piece move
-			switch(move.toLowerCase().trim()) {
-				case "reset":
-					start();
-					break;
-				case "resign": 
-					if(currentPlayer == Player.white) { // set winning color
-						result.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
-					} else {
-						result.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
-					}
-					break; 
-				case "draw":
-					result.message = ReturnPlay.Message.DRAW;
-					break;
-				default: 
-				
-				//make move
-				String moveFrom = move.substring(0, 2);   //example: "a1 a2" -> "a1" "a2"
-				String moveTo = move.substring(3, 5);
-				
-				// We need a legality check here
 
-				//check if space is empty
+		/**
+		 * This method should reset the game, and start from scratch.
+		 */
+		public static void start() {
 
-				ReturnPiece movingPiece = getPieceAt(moveFrom);
-                if (LegalCheck.isLegalMove(move, board) == false) {  //requires move logic to be valid to work
-                    result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-                }else{
-					movePiece(movingPiece, moveTo); // ~barebones implementation to move piece~
-					currentPlayer = Player.black; //switch player
-				}
-				break;
+			board = new ArrayList<>(); 
+			currentPlayer = Player.white;
+
+			//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
+			addToBoard(PieceType.WR, PieceFile.a, 1); 
+			addToBoard(PieceType.WN, PieceFile.b, 1);
+			addToBoard(PieceType.WB, PieceFile.c, 1);
+			addToBoard(PieceType.WQ, PieceFile.d, 1);
+			addToBoard(PieceType.WK, PieceFile.e, 1);
+			addToBoard(PieceType.WB, PieceFile.f, 1);
+			addToBoard(PieceType.WN, PieceFile.g, 1);
+			addToBoard(PieceType.WR, PieceFile.h, 1);
+
+			addToBoard(PieceType.BR, PieceFile.a, 8);
+			addToBoard(PieceType.BN, PieceFile.b, 8);
+			addToBoard(PieceType.BB, PieceFile.c, 8);
+			addToBoard(PieceType.BQ, PieceFile.d, 8);
+			addToBoard(PieceType.BK, PieceFile.e, 8);
+			addToBoard(PieceType.BB, PieceFile.f, 8);
+			addToBoard(PieceType.BN, PieceFile.g, 8);
+			addToBoard(PieceType.BR, PieceFile.h, 8);
+
+			//pawns
+			for (PieceFile file : PieceFile.values()){
+				addToBoard(PieceType.WP, file, 2);
+				addToBoard(PieceType.BP, file, 7);
 			}
-		}
-		currentPlayer = (currentPlayer == Player.white) ? Player.black : Player.white; //switch player
-		return result;
-	}
 
-	/**
-	 * This method should reset the game, and start from scratch.
-	 */
-	public static void start() {
-
-		board = new ArrayList<>(); 
-		currentPlayer = Player.white;
-
-		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
-		addToBoard(PieceType.WR, PieceFile.a, 1); 
-		addToBoard(PieceType.WN, PieceFile.b, 1);
-		addToBoard(PieceType.WB, PieceFile.c, 1);
-		addToBoard(PieceType.WQ, PieceFile.d, 1);
-		addToBoard(PieceType.WK, PieceFile.e, 1);
-		addToBoard(PieceType.WB, PieceFile.f, 1);
-		addToBoard(PieceType.WN, PieceFile.g, 1);
-		addToBoard(PieceType.WR, PieceFile.h, 1);
-
-		addToBoard(PieceType.BR, PieceFile.a, 8);
-		addToBoard(PieceType.BN, PieceFile.b, 8);
-		addToBoard(PieceType.BB, PieceFile.c, 8);
-		addToBoard(PieceType.BQ, PieceFile.d, 8);
-		addToBoard(PieceType.BK, PieceFile.e, 8);
-		addToBoard(PieceType.BB, PieceFile.f, 8);
-		addToBoard(PieceType.BN, PieceFile.g, 8);
-		addToBoard(PieceType.BR, PieceFile.h, 8);
-
-		//pawns
-		for (PieceFile file : PieceFile.values()){
-			addToBoard(PieceType.WP, file, 2);
-			addToBoard(PieceType.BP, file, 7);
+			PlayChess.printBoard(PlayChess.getCurrentBoardState());
+			currentPlayer = Player.white;
 		}
 
-		PlayChess.printBoard(PlayChess.getCurrentBoardState());
-		currentPlayer = Player.white;
-	}
-	private static void addToBoard(PieceType type, PieceFile file, int rank){
-		ReturnPiece piece = new ReturnPiece();
-		piece.pieceType = type;
-		piece.pieceFile = file;
-		piece.pieceRank = rank;
-		board.add(piece);
-	}
+		private static void addToBoard(PieceType type, PieceFile file, int rank){
+			ReturnPiece piece = new ReturnPiece();
+			piece.pieceType = type;
+			piece.pieceFile = file;
+			piece.pieceRank = rank;
+			board.add(piece);
+		}
 
 	//helper methods 
 
@@ -177,6 +166,23 @@ public class Chess {
 			}
 		}
 		return false;
+	}
+
+	private static boolean isWhiteMove(String move) {
+		String moveFrom = move.substring(0, 2);
+		ReturnPiece movingPiece = getPieceAt(moveFrom);
+		if (movingPiece != null) {
+			if (currentPlayer == Player.white) {
+				if (isWhitePiece(movingPiece.pieceType)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private static boolean isWhitePiece(PieceType pieceType) {
+		return pieceType.name().charAt(0) == 'W'; 
 	}
 }
 
