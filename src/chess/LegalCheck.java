@@ -191,14 +191,16 @@ public class LegalCheck {
   }
 
   private static boolean isSquareOccupiedBySameColor(String square, ArrayList<ReturnPiece> board,
-      ReturnPiece.PieceType pieceType) {
+      ReturnPiece.PieceType movingPieceType) {
     for (ReturnPiece piece : board) {
-      if (square.equals(piece.pieceFile.name() + piece.pieceRank) && piece.pieceType == pieceType) {
-        return true;
+      if (square.equals(piece.pieceFile.name() + piece.pieceRank)) {
+        if (isWhitePiece(movingPieceType) == isWhitePiece(piece.pieceType)) {
+          return true;
+        }
       }
     }
     return false;
-  }
+}
 
   private static boolean isSquareOccupiedByOpponent(String position, ArrayList<ReturnPiece> board,
       ReturnPiece.PieceType currentPieceType) {
