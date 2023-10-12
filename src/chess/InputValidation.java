@@ -17,7 +17,6 @@ public class InputValidation {
             switch(move.toLowerCase().trim()){
                 case "reset":
                 case "resign":
-                case "draw":
                     return true;
             default:
                 return isValidInputFormat(move);
@@ -26,6 +25,6 @@ public class InputValidation {
     }
 
     private static boolean isValidInputFormat(String input) {
-		return input.matches("^[a-h][1-8] [a-h][1-8]$");
+		return input.matches("^[a-h][1-8] [a-h][1-8]( draw\\?)?$");
 	}
 }

@@ -58,6 +58,12 @@ public class Chess {
 			ReturnPlay result = new ReturnPlay();
 			result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
 
+			// Handle draw requests
+			boolean requestingDraw = move.endsWith(" draw?");
+			if (requestingDraw) {
+				move = move.substring(0, move.length() - 6).trim();  // Remove " draw?" from the move
+			}
+
 			// Check if the input format is valid after checking for "resign, reset, etc."
 			if (!InputValidation.inputCheck(move)) {
 				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
@@ -93,7 +99,12 @@ public class Chess {
 			} else {
 				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
 			}
-		
+
+			// Handle draw requests at the end of the move processing
+			if (requestingDraw && result.message == null) { // only set draw message if there isn't another message already set
+				result.message = ReturnPlay.Message.DRAW;
+			}
+			
 			return result;
 		}
 
