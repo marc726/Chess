@@ -2,6 +2,33 @@ package chess;
 
 import java.util.ArrayList;
 
+
+/**
+ * Chess Castling:
+ * 
+ * Castling is a special chess move involving the king and one of the rooks. It is the only move that allows two pieces (the king and a rook) to move at the same time. Castling is subject to specific rules and serves a dual purpose of king safety and rook activation.
+ * 
+ * Restrictions:
+ * - Castling can only occur under the following conditions:
+ *   - Neither the king nor the rook involved in the castling has moved previously in the game.
+ *   - The squares between the king and the chosen rook must be unoccupied.
+ *   - The king cannot be in check before or after the castling move.
+ *   - The squares that the king moves across or occupies during castling cannot be under attack.
+ * - Castling can be either kingside (short castling) or queenside (long castling).
+ *   - Kingside castling involves the king moving two squares towards the rook on its right (g1 for White, g8 for Black), and the rook moving to the square crossed by the king (f1 for White, f8 for Black).
+ *   - Queenside castling involves the king moving two squares towards the rook on its left (c1 for White, c8 for Black), and the rook moving to the square crossed by the king (d1 for White, d8 for Black).
+ * 
+ * When It Occurs:
+ * - Castling can occur during a player's move if all the restrictions mentioned earlier are met.
+ * - It is a single move that is executed as one action.
+ * - Castling is a valuable strategic move to improve the safety of the king and activate a rook by bringing it to a central or semi-central file.
+ * - Castling is a rare move and often occurs in the early to mid-game.
+ * - Once a king or rook moves or castling conditions are violated, the right to castle in that particular game is lost for those pieces.
+ * 
+ * Castling adds depth to chess strategy by allowing players to develop their kingside and queenside positions efficiently while keeping the king safe. It is a unique chess move that requires a clear understanding of the rules and the game's tactical and positional aspects.
+ */
+
+
 public class Castle {
     
     public static boolean CastlePattern(String move, ArrayList<ReturnPiece> board) {

@@ -113,13 +113,14 @@ public class LegalCheck {
 
   private static boolean isLegalKnightMove(ReturnPiece knight, String start, String end, ArrayList<ReturnPiece> board) {
     // parse again
+    
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
-    // if move is L shape
-    int fileDiff = Math.abs(startFile - endFile);
+    // if move is L shape (2x1 or 1x2)
+    int fileDiff = Math.abs(startFile - endFile); 
     int rankDiff = Math.abs(startRank - endRank);
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
       // check if destination square is empty
