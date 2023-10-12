@@ -59,9 +59,15 @@ public class Chess {
     	result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
 		
 		// Check if the input format is valid after checking for "resign, reset, etc."
+
+		//check if first move is White's move
+		if (currentPlayer != Player.white) {
+			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
+			return result;
+		}
 		
 		//input isn't valid
-		if (InputValidation.inputCheck(move) == false){ 
+		if (!InputValidation.inputCheck(move)){ 
 			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
 		}else{ 
 			//input is either, resign, reset, or valid piece move
@@ -94,10 +100,12 @@ public class Chess {
                     result.message = ReturnPlay.Message.ILLEGAL_MOVE;
                 }else{
 					movePiece(movingPiece, moveTo); // ~barebones implementation to move piece~
+					currentPlayer = Player.black; //switch player
 				}
 				break;
 			}
 		}
+		currentPlayer = (currentPlayer == Player.white) ? Player.black : Player.white; //switch player
 		return result;
 	}
 
@@ -135,7 +143,7 @@ public class Chess {
 		}
 
 		PlayChess.printBoard(PlayChess.getCurrentBoardState());
-
+		currentPlayer = Player.white;
 	}
 	private static void addToBoard(PieceType type, PieceFile file, int rank){
 		ReturnPiece piece = new ReturnPiece();
@@ -159,6 +167,16 @@ public class Chess {
 	private static void movePiece(ReturnPiece piece, String moveTo) {
 		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
 		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
+	}
+
+
+	private static boolean hasMovedWhitePieces() {
+		for (ReturnPiece piece : board) {
+			if (piece.pieceType.name().charAt(0) == 'W') {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
