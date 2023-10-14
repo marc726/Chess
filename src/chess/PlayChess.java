@@ -29,7 +29,7 @@ public class PlayChess {
 			System.out.println();
 			
 			// print result board
-			printBoard(getCurrentBoardState());
+			printBoard(res.piecesOnBoard);
 			System.out.println();
 			
 			// next line

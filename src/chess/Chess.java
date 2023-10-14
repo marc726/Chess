@@ -98,7 +98,7 @@ public class Chess {
 			addToBoard(PieceType.WR, PieceFile.a, 1); 
 			addToBoard(PieceType.WN, PieceFile.b, 1);
 			addToBoard(PieceType.WB, PieceFile.c, 1);
-			addToBoard(PieceType.WQ, PieceFile.d, 1);
+			addToBoard(PieceType.WQ, PieceFile.d, 3);
 			addToBoard(PieceType.WK, PieceFile.e, 1);
 			addToBoard(PieceType.WB, PieceFile.f, 1);
 			addToBoard(PieceType.WN, PieceFile.g, 1);
