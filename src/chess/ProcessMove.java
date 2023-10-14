@@ -33,22 +33,22 @@ public class ProcessMove {
 
         //whites move
 		if (Chess.currentPlayer == Player.white) {
-			if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
-                ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
-                if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
-                    // The space is occupied by a black piece.
-                    Chess.takePiece(pieceAtTarget, Chess.board);  // Assuming you want to remove the piece.
-                }  
-				Chess.movePiece(movingPiece, moveTo);
-				Chess.currentPlayer = Player.black; // Switch player
-				return null;  // Successfully moved so no msg needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
+            ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
+            if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
+                // The space is occupied by a black piece.
+                Chess.takePiece(pieceAtTarget, Chess.board);  // Remove the taken piece first
+            }
+            if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
+                Chess.movePiece(movingPiece, moveTo); // Then move the piece
+                Chess.currentPlayer = Player.black; // Switch player
+                return null;  // Successfully moved so no msg needed
+            } else {
+                return ReturnPlay.Message.ILLEGAL_MOVE;
+            }
 
 
 
-		} else {  //blacks move
+        } else {  //blacks move
 			if (movingPiece != null && !Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
 				ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
                 if (pieceAtTarget != null && Chess.isWhitePiece(pieceAtTarget.pieceType)) {
