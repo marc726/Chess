@@ -41,6 +41,11 @@ public class Castle {
         String kingStart = move.substring(0, 2);
         String kingEnd = move.substring(3, 5);
 
+        //check if king is in check
+        if (Chess.isInCheck(kingStart)) {
+            return false;
+        }
+
         // Positions of the rooks
         String rookStart = kingEnd.equals("g1") || kingEnd.equals("g8") ? "h" + kingStart.charAt(1) : "a" + kingStart.charAt(1);
         String rookEnd = kingEnd.equals("g1") || kingEnd.equals("g8") ? "f" + kingEnd.charAt(1) : "d" + kingEnd.charAt(1);
@@ -61,8 +66,20 @@ public class Castle {
                 return false;
             }
         }
-            return true;
+        int rankInt = kingStart.charAt(1);
+        char startFileForKing = kingStart.charAt(0);
+        char endFileForKing = kingEnd.charAt(0);
+
+        for (char file = (char) (startFileForKing + 1); file < endFileForKing; file++) {
+            if (Chess.isSquareAttacked(String.valueOf(file) + rankInt, board)) {
+                return false;
+            }
         }
+        if (Chess.isInCheck(kingEnd)) {
+            return false;
+        }
+        return true;
+    }
         
         // TO-DO: Check that the king is not in check before castling
 

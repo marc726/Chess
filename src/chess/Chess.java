@@ -221,5 +221,29 @@ public class Chess {
 	private static boolean isWhitePiece(PieceType pieceType) {
 		return pieceType.name().charAt(0) == 'W'; 
 	}
+
+	public static boolean isInCheck(String position) {
+		// Check if the king is in check
+		ReturnPiece king = getPieceAt(position);
+		for (ReturnPiece piece : board) {
+			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
+				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isSquareAttacked(String position, ArrayList<ReturnPiece> board) {
+		for (ReturnPiece piece : board) {
+			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
+				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
