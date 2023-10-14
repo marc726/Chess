@@ -23,7 +23,7 @@ public class EnPassant {
     ReturnPiece lastMovedPiece = Chess.getPieceAt(lastMoveEnd);
     if (lastMovedPiece == null || !isPawn(lastMovedPiece)) return false;
 
-    // Ensure that the pawn being captured is of opposite color
+    // Ensure pawn being captured is opposite color
     if (lastMovedPiece.pieceType == pawn.pieceType) return false;
 
     if (Math.abs(lastMoveStart.charAt(1) - lastMoveEnd.charAt(1)) != 2) return false;
