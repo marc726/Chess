@@ -63,8 +63,22 @@ public class LegalCheck {
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
+    if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
+      // Check for normal capture
+      if (isSquareOccupiedByOpponent(end, board, pawn.pieceType)) {
+          return true;
+      }
+      // Check for en passant
+      if (EnPassant.canEnPassant(pawn, end)) {
+        // Also, remove the pawn being captured en passant
+        ReturnPiece capturedPawn = Chess.getPieceAt(String.valueOf(endFile) + startRank);
+        Chess.board.remove(capturedPawn);
+        return true;
+    }
+  }
+
     // Initial pawn move: two squares forward from the starting position
-    if (startRank == 2 && endRank == startRank + 2 * direction) {
+    if (!Chess.hasMoved.getOrDefault(pawn, false) && endRank == startRank + 2 * direction) {
       // Check if both the destination square and the square in between are empty
       String intermediateSquare = String.valueOf(startFile) + (startRank + direction);
       if (!isSquareOccupied(intermediateSquare, board) && !isSquareOccupied(end, board)) {
@@ -181,7 +195,7 @@ public class LegalCheck {
   }
   // Helper methods
 
-  private static boolean isSquareOccupied(String position, ArrayList<ReturnPiece> board) {
+  public static boolean isSquareOccupied(String position, ArrayList<ReturnPiece> board) {
     for (ReturnPiece piece : board) {
       if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) {
         return true;

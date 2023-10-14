@@ -30,83 +30,68 @@ import java.util.ArrayList;
 
 
 public class Castle {
-    
-    public static boolean CastlePattern(String move, ArrayList<ReturnPiece> board) {
-        //Check if the move is a castle or matches its pattern
-        if (move.matches("^[e][1-8] [c|g][1-8]$")) {
-            return true;
-        }
-        return false;
-    }
 
-    public static boolean isLegalCastling(String move, ArrayList<ReturnPiece> board) {
-        if (!CastlePattern(move, board)) {
+    public static boolean canCastle(String move, ArrayList<ReturnPiece> board) {
+        // Check the pattern
+        if (!matchesCastlePattern(move)) {
             return false;
         }
 
-        //Check Legality
-
-        //Rook and king positions
+        // Check legality
         String kingStart = move.substring(0, 2);
         String kingEnd = move.substring(3, 5);
-        String rookStart;
-        String rookEnd;
 
-        if (kingEnd.charAt(0) == 'g') {
-            rookStart = "h" + kingStart.charAt(1);
-            rookEnd = "f" + kingEnd.charAt(1);
-        } else {
-            rookStart = "a" + kingStart.charAt(1);
-            rookEnd = "d" + kingEnd.charAt(1);
-        }
+        // Positions of the rooks
+        String rookStart = kingEnd.equals("g1") || kingEnd.equals("g8") ? "h" + kingStart.charAt(1) : "a" + kingStart.charAt(1);
+        String rookEnd = kingEnd.equals("g1") || kingEnd.equals("g8") ? "f" + kingEnd.charAt(1) : "d" + kingEnd.charAt(1);
 
-        //check if king and rook are on board
-        ReturnPiece king = getPieceAt(kingStart, board);
-        ReturnPiece rook = getPieceAt(rookStart, board);
+        ReturnPiece king = Chess.getPieceAt(kingStart);
+        ReturnPiece rook = Chess.getPieceAt(rookStart);
 
-        if (king == null || rook == null) {
+        if (king == null || rook == null || Chess.hasMoved(king) || Chess.hasMoved(rook)) {
             return false;
         }
 
-        //checkif king and rook have moved
-        if (king.hasMoved || rook.hasMoved) {
-            return false;
-        } 
-
-        //check if squares in between are empty 
-
-        //check if king is in check
-
-        return true;
-    }
-
-    public static void makeCastlingMove(String move, ArrayList<ReturnPiece> board) {
-        if(!isLegalCastling(move, board)) {
-          return; // Illegal, do nothing
+        // Check no piece is in between the king and the rook
+        char startFile = kingStart.charAt(0);
+        char endFile = rookStart.charAt(0);
+        char rank = kingStart.charAt(1);
+        for (char file = (char) (Math.min(startFile, endFile) + 1); file < Math.max(startFile, endFile); file++) {
+            if (LegalCheck.isSquareOccupied(String.valueOf(file) + rank, board)) {
+                return false;
+            }
         }
-    
-        // Get king and rook
-        String kingStart = move.substring(0,2); 
-        String rookStart = move.substring(3,5); // Based on kingEnd
+            return true;
+        }
         
-    
-        // Update positions
-        movePiece(getPieceAt(kingStart, board), kingEnd, board);
-        movePiece(getPieceAt(rookStart, board), rookEnd, board);
-    
-      }
+        // TO-DO: Check that the king is not in check before castling
 
-       // Helpers
 
-    private static ReturnPiece getPieceAt(String pos, ArrayList<ReturnPiece> board) {
-        // Implementation  
+        // TO-DO: Check that the squares the king crosses are not attacked
+
+
+    public static boolean matchesCastlePattern(String move) {
+        return move.matches("^[e][1-8] [c|g][1-8]$");
     }
 
-    private static void movePiece(ReturnPiece piece, String newPos, ArrayList<ReturnPiece> board) {
-        // Implementation
+    public static void makeCastlingMove(String move) {
+        switch(move) {
+            case "e1 g1":
+                Chess.movePiece(Chess.getPieceAt("e1"), "g1");
+                Chess.movePiece(Chess.getPieceAt("h1"), "f1");
+                break;
+            case "e8 g8":
+                Chess.movePiece(Chess.getPieceAt("e8"), "g8");
+                Chess.movePiece(Chess.getPieceAt("h8"), "f8");
+                break;
+            case "e1 c1":
+                Chess.movePiece(Chess.getPieceAt("e1"), "c1");
+                Chess.movePiece(Chess.getPieceAt("a1"), "d1");
+                break;
+            case "e8 c8":
+                Chess.movePiece(Chess.getPieceAt("e8"), "c8");
+                Chess.movePiece(Chess.getPieceAt("a8"), "d8");
+                break;
+        }
     }
-
-    //checking something
-
-
 }

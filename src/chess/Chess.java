@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import chess.ReturnPiece.PieceFile;
 import chess.ReturnPiece.PieceType;
@@ -39,10 +41,12 @@ class ReturnPlay { //DO NOT ADD, DELETE, MODIFY
 
 public class Chess {
 	
-	enum Player { white, black } //DO NOT CHANGE
+	enum Player { white, black } //DO NOT CHANGE THIS LINE
 
 		public static ArrayList<ReturnPiece> board; //create board 
 		public static Player currentPlayer; // create the current player
+		public static Map<ReturnPiece, Boolean> hasMoved = new HashMap<>(); 
+		public static String lastMove = null;
 		
 		/**
 		 * Plays the next move for whichever player has the turn.
@@ -64,7 +68,7 @@ public class Chess {
 				move = move.substring(0, move.length() - 6).trim();  // Remove " draw?" from the move
 			}
 
-			// Check if the input format is valid after checking for "resign, reset, etc."
+			// Check if the input format is valid after checking for "resign, reset"
 			if (!InputValidation.inputCheck(move)) {
 				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
 				return result;
@@ -127,9 +131,9 @@ public class Chess {
 		}
 
 
+		
 
-
-	//helper methods 
+//helper methods 
 
 
 
@@ -137,7 +141,20 @@ public class Chess {
 		String moveFrom = move.substring(0, 2); //example: "a1 a2" -> "a1" "a2"
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = getPieceAt(moveFrom);
+		
+
 	
+		    // Check for castling moves:
+		if (Castle.matchesCastlePattern(move)) {
+			if (Castle.canCastle(move, board)) {
+				Castle.makeCastlingMove(move);
+				// Switch player after successful castling:
+				currentPlayer = (currentPlayer == Player.white) ? Player.black : Player.white;
+				return null;  // Successfully castled so no message is needed
+			} else {
+				return ReturnPlay.Message.ILLEGAL_MOVE;
+			}
+		}
 		if (currentPlayer == Player.white) {
 			if (movingPiece != null && isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
 				movePiece(movingPiece, moveTo);
@@ -158,9 +175,9 @@ public class Chess {
 	}
 
 
-	
 
-	private static ReturnPiece getPieceAt(String position) {
+
+	public static ReturnPiece getPieceAt(String position) {
 		for (ReturnPiece piece : board) {
 			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { //check if moveFrom == returnPiece.location (file + rank)
 				return piece;
@@ -172,7 +189,9 @@ public class Chess {
 
 
 
-	private static void movePiece(ReturnPiece piece, String moveTo) {
+	public static void movePiece(ReturnPiece piece, String moveTo) {
+		hasMoved.put(piece, true);
+		lastMove = piece.pieceFile.name() + piece.pieceRank + " " + moveTo; // Store the last move
 		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
 		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
 	}
@@ -188,7 +207,14 @@ public class Chess {
 		}
 		return false;
 	}
+
+
+
 	
+    public static boolean hasMoved(ReturnPiece piece) {
+        return hasMoved.getOrDefault(piece, false); // Check if the piece has moved
+    }
+
 
 
 
