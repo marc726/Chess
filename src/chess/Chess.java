@@ -72,7 +72,7 @@ public class Chess {
 	public static ReturnPlay play(String move) {
 
 		ReturnPlay result = new ReturnPlay();
-		result.piecesOnBoard = new ArrayList<>(board); // Copy the current state at the beginning
+		
 
 		// Handle draw requests
 		boolean requestingDraw = move.endsWith(" draw?");
@@ -89,6 +89,7 @@ public class Chess {
 			// Process move
 	
 			result.message = ProcessMove.processMove(move);
+			result.piecesOnBoard = new ArrayList<>(board); 
 
 		// Handle draw requests at the end of the move processing
 		if (requestingDraw && result.message == null) { // only set draw message if there isn't another message already
@@ -111,7 +112,7 @@ public class Chess {
 		addToBoard(PieceType.WR, PieceFile.a, 1); 
 		addToBoard(PieceType.WN, PieceFile.b, 1);
 		addToBoard(PieceType.WB, PieceFile.c, 1);
-		addToBoard(PieceType.WQ, PieceFile.d, 1);
+		addToBoard(PieceType.WQ, PieceFile.d, 3);
 		addToBoard(PieceType.WK, PieceFile.e, 1);
 		addToBoard(PieceType.WB, PieceFile.f, 1);
 		addToBoard(PieceType.WN, PieceFile.g, 1);
