@@ -205,12 +205,6 @@ public class Chess {
 		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
 	}
 
-	public static void takePiece(ReturnPiece piece, ArrayList<ReturnPiece> board) {
-		if (piece != null && board.contains(piece)) {
-			board.remove(piece);
-		}
-	}
-
 	// Pawn Promotion
 
 	public static void promotePawn(String move, ArrayList<ReturnPiece> board) {

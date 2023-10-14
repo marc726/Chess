@@ -36,7 +36,7 @@ public class ProcessMove {
             ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
             if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
                 // The space is occupied by a black piece.
-                Chess.takePiece(pieceAtTarget, Chess.board);  // Remove the taken piece first
+                Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
             }
             if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
                 Chess.movePiece(movingPiece, moveTo); // Then move the piece
@@ -53,7 +53,7 @@ public class ProcessMove {
 				ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
                 if (pieceAtTarget != null && Chess.isWhitePiece(pieceAtTarget.pieceType)) {
                     // The space is occupied by a black piece.
-                    Chess.takePiece(pieceAtTarget, Chess.board);  // Assuming you want to remove the piece.
+                    Chess.board.remove(pieceAtTarget);  // Assuming you want to remove the piece.
                 }  
                 Chess.movePiece(movingPiece, moveTo);
 				Chess.currentPlayer = Player.white; // Switch player
