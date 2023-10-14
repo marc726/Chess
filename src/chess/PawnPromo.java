@@ -45,27 +45,29 @@ public class PawnPromo {
         // Get start and end positions
         String startPos = move.substring(0, 2);
         String endPos = move.substring(3, 5);
-
+    
         // Get the pawn
         ReturnPiece pawn = Chess.getPieceAt(startPos);
-
-        // Check if piece is a pawn
-        if (!isPawn(pawn)) {
+    
+        // If pawn is null or not an actual pawn, return false
+        if (pawn == null || !isPawn(pawn)) {
             return false;
         }
-
+    
         // Check if pawn ends on promotion rank
         int promoRank = getPromotionRank(pawn);
-        if (promoRank != Chess.getPieceAt(endPos).pieceRank) {
+        ReturnPiece pieceAtEndPos = Chess.getPieceAt(endPos);
+        if (pieceAtEndPos == null || promoRank != pieceAtEndPos.pieceRank) {
             return false;
         }
-
+    
         // If reaches here, promotion requirements met
         return true;
-
+    
     }
 
     private static boolean isPawn(ReturnPiece piece) {
+        if (piece == null) return false;
         return piece.pieceType == PieceType.WP || piece.pieceType == PieceType.BP;
     }
 

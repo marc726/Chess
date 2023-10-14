@@ -107,15 +107,15 @@ public class Chess {
 		board = new ArrayList<>();
 		currentPlayer = Player.white;
 
-			//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
-			addToBoard(PieceType.WR, PieceFile.a, 1); 
-			addToBoard(PieceType.WN, PieceFile.b, 1);
-			addToBoard(PieceType.WB, PieceFile.c, 1);
-			addToBoard(PieceType.WQ, PieceFile.d, 3);
-			addToBoard(PieceType.WK, PieceFile.e, 1);
-			addToBoard(PieceType.WB, PieceFile.f, 1);
-			addToBoard(PieceType.WN, PieceFile.g, 1);
-			addToBoard(PieceType.WR, PieceFile.h, 1);
+		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
+		addToBoard(PieceType.WR, PieceFile.a, 1); 
+		addToBoard(PieceType.WN, PieceFile.b, 1);
+		addToBoard(PieceType.WB, PieceFile.c, 1);
+		addToBoard(PieceType.WQ, PieceFile.d, 3);
+		addToBoard(PieceType.WK, PieceFile.e, 1);
+		addToBoard(PieceType.WB, PieceFile.f, 1);
+		addToBoard(PieceType.WN, PieceFile.g, 1);
+		addToBoard(PieceType.WR, PieceFile.h, 1);
 
 		addToBoard(PieceType.BR, PieceFile.a, 8);
 		addToBoard(PieceType.BN, PieceFile.b, 8);
@@ -126,14 +126,16 @@ public class Chess {
 		addToBoard(PieceType.BN, PieceFile.g, 8);
 		addToBoard(PieceType.BR, PieceFile.h, 8);
 
+
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
 			addToBoard(PieceType.WP, file, 2);
 			addToBoard(PieceType.BP, file, 7);
 		}
 
-		PlayChess.printBoard(PlayChess.getCurrentBoardState());
 		currentPlayer = Player.white;
+		PlayChess.printBoard(board);
+		System.out.println();
 	}
 
 	private static void addToBoard(PieceType type, PieceFile file, int rank) {

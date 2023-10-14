@@ -10,7 +10,6 @@ public class PlayChess {
 		Scanner sc = new Scanner(System.in);
 		Chess.start();
 		
-		
 		String line = sc.nextLine();
 		while (!line.equals("quit")) {
 			if (line.equals("reset")) {
@@ -77,9 +76,5 @@ public class PlayChess {
 			ppstr += pieceStr.charAt(1) == 'P' ? 'p' : pieceStr.charAt(1);
 			board[8-rp.pieceRank][file] = ppstr;
 		}	
-	}
-	static ArrayList<ReturnPiece> getCurrentBoardState() {
-
-		return Chess.board;
 	}
 }
