@@ -25,6 +25,6 @@ public class InputValidation {
     }
 
     private static boolean isValidInputFormat(String input) {
-		return input.matches("^[a-h][1-8] [a-h][1-8]( draw\\?)?$");
+		return input.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?( draw\\?)?$");
 	}
 }

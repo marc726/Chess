@@ -125,13 +125,14 @@ public class Chess {
 		addToBoard(PieceType.BK, PieceFile.e, 8);
 		addToBoard(PieceType.BB, PieceFile.f, 8);
 		addToBoard(PieceType.BN, PieceFile.g, 8);
-		addToBoard(PieceType.BR, PieceFile.h, 8);
+		//addToBoard(PieceType.BR, PieceFile.h, 8);
+		addToBoard(PieceType.WP, PieceFile.h, 7);
 
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
 			addToBoard(PieceType.WP, file, 2);
-			addToBoard(PieceType.BP, file, 7);
+			//addToBoard(PieceType.BP, file, 7);
 		}
 
 		currentPlayer = Player.white;
@@ -139,7 +140,7 @@ public class Chess {
 		System.out.println();
 	}
 
-	private static void addToBoard(PieceType type, PieceFile file, int rank) {
+	public static void addToBoard(PieceType type, PieceFile file, int rank) {
 		ReturnPiece piece = new ReturnPiece();
 		piece.pieceType = type;
 		piece.pieceFile = file;
@@ -203,41 +204,5 @@ public class Chess {
 	private static boolean isPieceSameColor(ReturnPiece piece, String position) {
 		ReturnPiece king = Chess.getPieceAt(position);
 		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
-	}
-
-	// Pawn Promotion
-
-	public static void promotePawn(String move, ArrayList<ReturnPiece> board) {
-
-		String startPos = move.substring(0, 2);
-		String endPos = move.substring(3, 5);
-
-		ReturnPiece pawn = Chess.getPieceAt(startPos);
-
-		// Remove pawn
-		board.remove(pawn);
-
-		// Determine promotion piece type
-		PieceType promoType = PieceType.WQ; // Default to queen
-		if (move.length() == 5) {
-			switch (move.charAt(4)) {
-				case 'N':
-					promoType = PieceType.WN;
-					break;
-				case 'B':
-					promoType = PieceType.WB;
-					break;
-				case 'R':
-					promoType = PieceType.WR;
-					break;
-			}
-		}
-
-		// Add promotion piece
-		Chess.addToBoard(promoType, pawn.pieceFile, pawn.pieceRank);
-
-		// Make the move
-		Chess.movePiece(Chess.getPieceAt(endPos), endPos);
-
 	}
 }

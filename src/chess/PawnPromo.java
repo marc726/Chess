@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+import chess.ReturnPiece.PieceFile;
 import chess.ReturnPiece.PieceType;
 
 /**
@@ -41,12 +42,7 @@ import chess.ReturnPiece.PieceType;
 public class PawnPromo {
 
     public static boolean checkPawnPromotion(String move, ArrayList<ReturnPiece> board) {
-
-        // Get start and end positions
         String startPos = move.substring(0, 2);
-        String endPos = move.substring(3, 5);
-    
-        // Get the pawn
         ReturnPiece pawn = Chess.getPieceAt(startPos);
     
         // If pawn is null or not an actual pawn, return false
@@ -54,16 +50,13 @@ public class PawnPromo {
             return false;
         }
     
-        // Check if pawn ends on promotion rank
+        // Check if pawn ends on promotion rank based on its color
         int promoRank = getPromotionRank(pawn);
-        ReturnPiece pieceAtEndPos = Chess.getPieceAt(endPos);
-        if (pieceAtEndPos == null || promoRank != pieceAtEndPos.pieceRank) {
+        if (promoRank != Character.getNumericValue(move.charAt(4))) { // directly check the rank of endPos
             return false;
         }
     
-        // If reaches here, promotion requirements met
         return true;
-    
     }
 
     private static boolean isPawn(ReturnPiece piece) {
@@ -78,4 +71,47 @@ public class PawnPromo {
             return 1;
         }
     }
+
+
+    public static void promotePawn(String move, ArrayList<ReturnPiece> board) {
+		String startPos = move.substring(0, 2);
+		ReturnPiece pawn = Chess.getPieceAt(startPos);
+	
+		// Remove pawn from board
+		board.remove(pawn);
+	
+		// Determine promotion piece type based on pawn's color and the provided move
+		PieceType promoType;
+	
+		if (move.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?$") || move.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?$|^draw$|^resign$|^reset$")) {
+			char promotionChar = move.charAt(6);  // Get the promotion character from the move string
+			switch (promotionChar) {
+				case 'N':
+					promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WN : PieceType.BN;
+					break;
+				case 'B':
+					promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WB : PieceType.BB;
+					break;
+				case 'R':
+					promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WR : PieceType.BR;
+					break;
+				default:
+					promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WQ : PieceType.BQ; // Default to queen
+					break;
+			}
+		} else {
+			promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WQ : PieceType.BQ; // Default to queen if no promotion character specified
+		}
+
+		if (move.matches("^[a-h][1-8] [a-h][1-8] draw$")) {
+			// Handle draw request after a move
+		} else if (move.matches("^[a-h][1-8] [a-h][1-8] resign$")) {
+			// Handle resign request after a move
+		} else if (move.matches("^[a-h][1-8] [a-h][1-8] reset$")) {
+			// Handle reset request after a move
+	
+		}
+		// Add promotion piece to board at the end position
+		Chess.addToBoard(promoType, PieceFile.valueOf(move.substring(3, 4)), Character.getNumericValue(move.charAt(4)));
+	}
 }
