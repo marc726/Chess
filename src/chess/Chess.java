@@ -70,35 +70,8 @@ public class Chess {
 				return result;
 			}
 
-			// Check if it's the first move (white move)
-			if (currentPlayer == Player.white) {
-				String moveFrom = move.substring(0, 2);
-				String moveTo = move.substring(3, 5);
-				ReturnPiece movingPiece = getPieceAt(moveFrom);
-				if (movingPiece != null && isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
-					movePiece(movingPiece, moveTo);
-					currentPlayer = Player.black; // Switch player
-				} else {
-					result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				}
-			} else if (currentPlayer == Player.black) {
-				// Check if the input move is valid for black
-				if (!isWhiteMove(move)) {
-					String moveFrom = move.substring(0, 2);
-					String moveTo = move.substring(3, 5);
-					ReturnPiece movingPiece = getPieceAt(moveFrom);
-					if (LegalCheck.isLegalMove(move, board)) {
-						movePiece(movingPiece, moveTo);
-						currentPlayer = Player.white; // Switch player
-					} else {
-						result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-					}
-				} else {
-					result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-				}
-			} else {
-				result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			}
+			// Process move
+			result.message = processMove(move);
 
 			// Handle draw requests at the end of the move processing
 			if (requestingDraw && result.message == null) { // only set draw message if there isn't another message already set
@@ -153,7 +126,39 @@ public class Chess {
 			board.add(piece);
 		}
 
+
+
+
 	//helper methods 
+
+
+
+	private static ReturnPlay.Message processMove(String move) {
+		String moveFrom = move.substring(0, 2); //example: "a1 a2" -> "a1" "a2"
+		String moveTo = move.substring(3, 5);
+		ReturnPiece movingPiece = getPieceAt(moveFrom);
+	
+		if (currentPlayer == Player.white) {
+			if (movingPiece != null && isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
+				movePiece(movingPiece, moveTo);
+				currentPlayer = Player.black; // Switch player
+				return null;  // Successfully moved so no msg needed
+			} else {
+				return ReturnPlay.Message.ILLEGAL_MOVE;
+			}
+		} else {  // It's black's turn
+			if (movingPiece != null && !isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
+				movePiece(movingPiece, moveTo);
+				currentPlayer = Player.white; // Switch player
+				return null;  // Successfully moved so no msg needed
+			} else {
+				return ReturnPlay.Message.ILLEGAL_MOVE;
+			}
+		}
+	}
+
+
+	
 
 	private static ReturnPiece getPieceAt(String position) {
 		for (ReturnPiece piece : board) {
@@ -164,10 +169,15 @@ public class Chess {
 		return null; 
 	}
 	
+
+
+
 	private static void movePiece(ReturnPiece piece, String moveTo) {
 		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
 		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
 	}
+
+
 
 
 	private static boolean hasMovedWhitePieces() {
@@ -178,20 +188,10 @@ public class Chess {
 		}
 		return false;
 	}
-
-	private static boolean isWhiteMove(String move) {
-		String moveFrom = move.substring(0, 2);
-		ReturnPiece movingPiece = getPieceAt(moveFrom);
-		if (movingPiece != null) {
-			if (currentPlayer == Player.white) {
-				if (isWhitePiece(movingPiece.pieceType)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	
+
+
+
 	private static boolean isWhitePiece(PieceType pieceType) {
 		return pieceType.name().charAt(0) == 'W'; 
 	}
