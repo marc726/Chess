@@ -75,6 +75,7 @@ public class Chess {
 			}
 
 			// Process move
+	
 			result.message = ProcessMove.processMove(move);
 
 			// Handle draw requests at the end of the move processing
