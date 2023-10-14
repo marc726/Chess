@@ -75,7 +75,7 @@ public class Chess {
 			}
 
 			// Process move
-			result.message = processMove(move);
+			result.message = ProcessMove.processMove(move);
 
 			// Handle draw requests at the end of the move processing
 			if (requestingDraw && result.message == null) { // only set draw message if there isn't another message already set
@@ -138,46 +138,6 @@ public class Chess {
 
 
 
-	private static ReturnPlay.Message processMove(String move) {
-		String moveFrom = move.substring(0, 2); //example: "a1 a2" -> "a1" "a2"
-		String moveTo = move.substring(3, 5);
-		ReturnPiece movingPiece = getPieceAt(moveFrom);
-		
-
-	
-		    // Check for castling moves:
-		if (Castle.matchesCastlePattern(move)) {
-			if (Castle.canCastle(move, board)) {
-				Castle.makeCastlingMove(move);
-				// Switch player after successful castling:
-				currentPlayer = (currentPlayer == Player.white) ? Player.black : Player.white;
-				return null;  // Successfully castled so no message is needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
-		}
-		if (currentPlayer == Player.white) {
-			if (movingPiece != null && isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
-				movePiece(movingPiece, moveTo);
-				currentPlayer = Player.black; // Switch player
-				return null;  // Successfully moved so no msg needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
-		} else {  // It's black's turn
-			if (movingPiece != null && !isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, board)) {
-				movePiece(movingPiece, moveTo);
-				currentPlayer = Player.white; // Switch player
-				return null;  // Successfully moved so no msg needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
-		}
-	}
-
-
-
-
 	public static ReturnPiece getPieceAt(String position) {
 		for (ReturnPiece piece : board) {
 			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { //check if moveFrom == returnPiece.location (file + rank)
@@ -189,7 +149,6 @@ public class Chess {
 	
 
 
-
 	public static void movePiece(ReturnPiece piece, String moveTo) {
 		hasMoved.put(piece, true);
 		lastMove = piece.pieceFile.name() + piece.pieceRank + " " + moveTo; // Store the last move
@@ -199,17 +158,17 @@ public class Chess {
 
 
 	
-	
     public static boolean hasMoved(ReturnPiece piece) {
         return hasMoved.getOrDefault(piece, false); // Check if the piece has moved
     }
 
 
 
-
-	private static boolean isWhitePiece(PieceType pieceType) {
+	public static boolean isWhitePiece(PieceType pieceType) {
 		return pieceType.name().charAt(0) == 'W'; 
 	}
+
+
 
 	public static boolean isInCheck(String position) {
 		// Check if the king is in check
@@ -224,6 +183,8 @@ public class Chess {
 		return false;
 	}
 
+
+
 	public static boolean isSquareAttacked(String position, ArrayList<ReturnPiece> board) {
 		for (ReturnPiece piece : board) {
 			if (!isPieceSameColor(piece, position)) {
@@ -235,9 +196,18 @@ public class Chess {
 		return false;
 	}
 
+
 	private static boolean isPieceSameColor(ReturnPiece piece, String position) {
 		ReturnPiece king = Chess.getPieceAt(position);
 		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
 	}
+
+	public static void takePiece(ReturnPiece piece, ArrayList<ReturnPiece> board){
+		if (piece != null && board.contains(piece)){
+			board.remove(piece);
+		}
+	}
+
+
 }
 
