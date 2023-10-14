@@ -128,6 +128,7 @@ public class Chess {
 			piece.pieceFile = file;
 			piece.pieceRank = rank;
 			board.add(piece);
+			hasMoved.put(piece, false);
 		}
 
 
@@ -197,19 +198,7 @@ public class Chess {
 	}
 
 
-
-
-	private static boolean hasMovedWhitePieces() {
-		for (ReturnPiece piece : board) {
-			if (piece.pieceType.name().charAt(0) == 'W') {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-
+	
 	
     public static boolean hasMoved(ReturnPiece piece) {
         return hasMoved.getOrDefault(piece, false); // Check if the piece has moved
@@ -224,10 +213,10 @@ public class Chess {
 
 	public static boolean isInCheck(String position) {
 		// Check if the king is in check
-		ReturnPiece king = getPieceAt(position);
 		for (ReturnPiece piece : board) {
 			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
 				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
+					System.out.println("Threatening Piece: " + piece.pieceType + " at " + piece.pieceFile.name() + piece.pieceRank);  // Printing the threatening piece
 					return true;
 				}
 			}

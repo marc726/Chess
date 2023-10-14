@@ -184,10 +184,21 @@ public class LegalCheck {
     // one square in any direction
     int fileDiff = Math.abs(startFile - endFile);
     int rankDiff = Math.abs(startRank - endRank);
+
+    //typical movement logic
     if (fileDiff <= 1 && rankDiff <= 1) {
       // dest is empty
       if (!isSquareOccupiedBySameColor(end, board, king.pieceType)) {
         return true;
+      }
+    }
+
+    //castle movement logic
+    if (rankDiff == 0 && (fileDiff == 2 || fileDiff == 3)) {
+      // Here, check for the castling conditions.
+      // For example: no pieces between king and rook, king is not in check, etc.
+      if (Castle.canCastle(start + " " + end, board)) {
+          return true;
       }
     }
 
