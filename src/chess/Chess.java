@@ -237,13 +237,18 @@ public class Chess {
 
 	public static boolean isSquareAttacked(String position, ArrayList<ReturnPiece> board) {
 		for (ReturnPiece piece : board) {
-			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
+			if (!isPieceSameColor(piece, position)) {
 				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	private static boolean isPieceSameColor(ReturnPiece piece, String position) {
+		ReturnPiece king = Chess.getPieceAt(position);
+		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
 	}
 }
 
