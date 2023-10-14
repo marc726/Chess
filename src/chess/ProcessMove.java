@@ -24,7 +24,12 @@ public class ProcessMove {
 			}
 		}
 
-
+		// Check for pawn promotion:
+		if (PawnPromo.checkPawnPromotion(move, Chess.board)) {
+			Chess.promotePawn(move, Chess.board);
+			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
+			return null;
+		}
 
         //whites move
 		if (Chess.currentPlayer == Player.white) {
