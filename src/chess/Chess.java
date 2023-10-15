@@ -121,6 +121,7 @@ public class Chess {
 		//addToBoard(PieceType.WB, PieceFile.f, 1);
 		//addToBoard(PieceType.WN, PieceFile.g, 1);
 		addToBoard(PieceType.WR, PieceFile.h, 1);
+		addToBoard(PieceType.WR, PieceFile.h, 7);
 
 		//addToBoard(PieceType.BR, PieceFile.a, 8);
 		//addToBoard(PieceType.BN, PieceFile.b, 8);
@@ -130,7 +131,6 @@ public class Chess {
 		//addToBoard(PieceType.BB, PieceFile.f, 8);
 		//addToBoard(PieceType.BN, PieceFile.g, 8);
 		//addToBoard(PieceType.BR, PieceFile.h, 8);
-
 
 
 		// pawns

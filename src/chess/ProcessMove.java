@@ -7,22 +7,17 @@ public class ProcessMove {
     
 
     public static ReturnPlay.Message processMove(String move) {
-
 		if (!InputValidation.inputCheck(move)) {
 			return ReturnPlay.Message.ILLEGAL_MOVE;
 		}
-
-		String moveFrom = move.substring(0, 2); //example: "a1 a2" -> "a1" "a2"
+	
+		String moveFrom = move.substring(0, 2);
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
-		
-
 	
-		    // Check for castling moves:
+		// Check for castling moves:
 		if (Castle.matchesCastlePattern(move)) {
-			System.out.println("Castling move");
 			if (Castle.canCastle(move, Chess.board)) {
-				System.out.println("Can castle");
 				Castle.makeCastlingMove(move);
 				// Switch player after successful castling:
 				Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
@@ -45,44 +40,28 @@ public class ProcessMove {
 		if (PawnPromo.checkPawnPromotion(move, Chess.board)) {
 			PawnPromo.promotePawn(move, Chess.board);
 			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
-			return null;
+			return null;  // Pawn successfully promoted so no message is needed
 		}
+	
+		// Save the piece at the target location
+		ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
 
-		    // Check if the piece is a king
-			if (movingPiece != null && (movingPiece.pieceType == PieceType.WK || movingPiece.pieceType == PieceType.BK)) {
-				if (Chess.isSquareAttacked(moveTo, Chess.board, movingPiece)) {
-					return ReturnPlay.Message.ILLEGAL_MOVE;
-				}
+		// Make the move
+		Chess.movePiece(movingPiece, moveTo);
+	
+		// Check if the king is in check after making the move
+		if (Chess.isSquareAttacked(Chess.getKingPos(Chess.currentPlayer), Chess.board, movingPiece)) {
+			// If the king is in check, revert the move
+			Chess.movePiece(movingPiece, moveFrom); // Move the piece back
+			if (pieceAtTarget != null) {
+				Chess.board.add(pieceAtTarget); // Put the taken piece back
 			}
-        
-		// whites move
-		if (Chess.currentPlayer == Player.white) {
-			ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
-			if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
-				// The space is occupied by a black piece.
-				Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
-			}
-			if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
-				Chess.movePiece(movingPiece, moveTo); // Then move the piece
-				Chess.currentPlayer = Player.black; // Switch player
-				return null;  // Successfully moved so no message is needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
-		} else { //blacks move
-			ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
-			if (pieceAtTarget != null && Chess.isWhitePiece(pieceAtTarget.pieceType)) {
-				// The space is occupied by a white piece.
-				Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
-			}
-			if (movingPiece != null && !Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
-				Chess.movePiece(movingPiece, moveTo); // Then move the piece
-				Chess.currentPlayer = Player.white; // Switch player
-				return null;  // Successfully moved so no message is needed
-			} else {
-				return ReturnPlay.Message.ILLEGAL_MOVE;
-			}
+			return ReturnPlay.Message.ILLEGAL_MOVE;
 		}
+	
+		// Switch player after a successful move
+		Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
+		return null;  // Successfully moved so no message is needed
 	}
 }
 
