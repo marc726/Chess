@@ -283,6 +283,9 @@ public class CheckMate {
     public static boolean isSquareBlocked(char file, int rank, ArrayList<ReturnPiece> board, ReturnPiece piece) {
         // Check if any pieces of same color are between the piece's file/rank and the
         // target square
+        if (piece == null) {
+            return false;
+        }
         return !LegalCheck.isPathClear(piece.pieceFile.name() + piece.pieceRank, file + String.valueOf(rank), board);
     }
 

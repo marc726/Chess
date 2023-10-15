@@ -32,6 +32,15 @@ public class ProcessMove {
 			}
 		}
 
+		//check for checkmate
+		if (CheckMate.isKingInCheck(Chess.board, Chess.currentPlayer)) {
+			if (Chess.currentPlayer == Player.white) {
+				return ReturnPlay.Message.CHECKMATE_WHITE_WINS;
+			} else {
+				return ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+			}
+		}
+
 		// Check for pawn promotion:
 		if (PawnPromo.checkPawnPromotion(move, Chess.board)) {
 			PawnPromo.promotePawn(move, Chess.board);
