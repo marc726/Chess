@@ -15,7 +15,9 @@ public class ProcessMove {
 	
 		    // Check for castling moves:
 		if (Castle.matchesCastlePattern(move)) {
+			System.out.println("Castling move");
 			if (Castle.canCastle(move, Chess.board)) {
+				System.out.println("Can castle");
 				Castle.makeCastlingMove(move);
 				// Switch player after successful castling:
 				Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;

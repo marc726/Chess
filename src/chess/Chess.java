@@ -114,7 +114,7 @@ public class Chess {
 		addToBoard(PieceType.WB, PieceFile.c, 1);
 		addToBoard(PieceType.WQ, PieceFile.d, 1);
 		addToBoard(PieceType.WK, PieceFile.e, 1);
-		//addToBoard(PieceType.WB, PieceFile.f, 1);
+		addToBoard(PieceType.WB, PieceFile.f, 1);
 		addToBoard(PieceType.WN, PieceFile.g, 1);
 		addToBoard(PieceType.WR, PieceFile.h, 1);
 
@@ -131,8 +131,8 @@ public class Chess {
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
-			//addToBoard(PieceType.WP, file, 2);
-			//addToBoard(PieceType.BP, file, 7);
+			addToBoard(PieceType.WP, file, 2);
+			addToBoard(PieceType.BP, file, 7);
 		}
 
 		currentPlayer = Player.white;
@@ -195,10 +195,13 @@ public class Chess {
 
 
 	public static boolean isSquareAttacked(String moveToPosition, ArrayList<ReturnPiece> board, ReturnPiece movingPiece) {
+		System.out.println("Checking if " + moveToPosition + " is attacked");
     for (ReturnPiece piece : board) {
         if (piece.equals(movingPiece)) continue; // Exclude the moving piece from the check
+		System.out.println("Checking if " + piece.pieceFile.name() + piece.pieceRank + " can attack " + moveToPosition);
         if (!isPieceSameColor(piece, movingPiece)) {
             if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + moveToPosition, board)) {
+				System.out.println("Square is attacked by " + piece.pieceType.name() + " at " + piece.pieceFile.name() + piece.pieceRank);
                 return true;
             }
         }

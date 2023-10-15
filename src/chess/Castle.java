@@ -40,18 +40,22 @@ public class Castle {
         String endPosition = move.substring(3, 5);
         
         ReturnPiece king = Chess.getPieceAt(kingPosition);
+        System.out.println("King: " + king.pieceType.name() + " at " + kingPosition);
         
         if (Chess.hasMoved(king)) {
+            System.out.println("King has moved");
             return false;
         }
         
         // Check if the squares between the king and the rook are empty
         if (endPosition.equals("g1") || endPosition.equals("g8")) {
             if (Chess.getPieceAt("f" + king.pieceRank) != null || Chess.getPieceAt("g" + king.pieceRank) != null) {
+                System.out.println("Squares between king and rook are not empty");
                 return false;
             }
-            if (!Chess.hasMoved(Chess.getPieceAt("h" + king.pieceRank))) {
-                return true;
+            if (Chess.hasMoved(Chess.getPieceAt("h" + king.pieceRank))) {
+                System.out.println("Rook has moved");
+                return false;
             }
         }
         
@@ -59,8 +63,9 @@ public class Castle {
             if (Chess.getPieceAt("b" + king.pieceRank) != null || Chess.getPieceAt("c" + king.pieceRank) != null || Chess.getPieceAt("d" + king.pieceRank) != null) {
                 return false;
             }
-            if (!Chess.hasMoved(Chess.getPieceAt("a" + king.pieceRank))) {
-                return true;
+            if (Chess.hasMoved(Chess.getPieceAt("a" + king.pieceRank))) {
+                System.out.println("Rook hasn't moved");
+                return false;
             }
         }
         
@@ -76,7 +81,9 @@ public class Castle {
             intermediateSquare = "d" + king.pieceRank;
         }
 
-        if (Chess.isSquareAttacked(intermediateSquare, board)) {
+
+        
+        if (Chess.isSquareAttacked(intermediateSquare, board, king)) {
             return false;
         }
         
