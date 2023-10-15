@@ -132,6 +132,8 @@ public class Chess {
 		//addToBoard(PieceType.BN, PieceFile.g, 8);
 		//addToBoard(PieceType.BR, PieceFile.h, 8);
 
+		addToBoard(PieceType.BP, PieceFile.e, 7);
+
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
