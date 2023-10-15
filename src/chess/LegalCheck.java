@@ -270,7 +270,7 @@ public class LegalCheck {
 
   // assume that we've checked if the piece can make that move already. Knights
   // are excluded from this
-  private static boolean isPathClear(String start, String end, ArrayList<ReturnPiece> board) {
+  public static boolean isPathClear(String start, String end, ArrayList<ReturnPiece> board) {
     // Implement logic to check if the path between two positions is clear of pieces
     // Return true if the path is clear, otherwise return false
 
