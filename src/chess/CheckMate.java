@@ -169,7 +169,7 @@ public class CheckMate {
         for (int i = -2; i <= 2; i++) {
             if (Math.abs(i) == 2) {
                 checkKnightMove(file, rank, moves, (char) (file + i), board);
-                checkKnightMove(file, rank, moves, rank + i / 2, board);
+                checkKnightMove(file, rank, moves, (char) (rank + i / 2), board);
             }
         }
 
@@ -227,7 +227,7 @@ public class CheckMate {
         }
 
         // Check for castling
-        if (!king.hasMoved) {
+        if (!Chess.hasMoved.getOrDefault(king, false)) {
             // Kingside castling
             if (!isSquareBlocked(file, rank, board, king)
                     && canCastleKingside(board)) {
@@ -259,9 +259,11 @@ public class CheckMate {
         // Check if target square contains enemy piece
         else {
             ReturnPiece endPiece = Chess.getPieceAt(endFile + "");
-            ReturnPiece knight = Chess.getPieceAt(startFile + startRank);
+            String startPos = "" + startFile + startRank;
+            ReturnPiece knight = Chess.getPieceAt(startPos);
+
             if (!Chess.isPieceSameColor(endPiece, knight, board)) {
-                moves.add(String.valueOf(startFile) + startRank + endFile + startRank);
+            moves.add(startPos + endFile + startRank);
             }
         }
     }
