@@ -130,8 +130,10 @@ public class CheckMate {
         }
 
         // Add en passant if applicable
-        if (EnPassant.canEnPassant(pawn, board)) {
-            char epFile = EnPassant.enPassantFile;
+        char targetFile = (direction == 1) ? (char) (file + 1) : (char) (file - 1); // Adjust based on your game logic
+        String targetPosition = targetFile + String.valueOf(endRank + direction);
+        if (EnPassant.canEnPassant(pawn, targetPosition)) {
+            char epFile = targetFile;  // Adjust this if needed
             moves.add(String.valueOf(file) + startRank + epFile + (startRank + direction));
         }
 
@@ -167,9 +169,10 @@ public class CheckMate {
 
         // Check L-shaped moves
         for (int i = -2; i <= 2; i++) {
-            if (Math.abs(i) == 2) {
-                checkKnightMove(file, rank, moves, (char) (file + i), board);
-                checkKnightMove(file, rank, moves, rank + i / 2, board);
+            for (int j = -2; j <= 2; j++) {
+                if (Math.abs(i) + Math.abs(j) == 3) { // Ensures L-shape movement
+                    checkKnightMove(file, rank, moves, (char) (file + i), rank + j, board);
+                }
             }
         }
 
@@ -227,7 +230,7 @@ public class CheckMate {
         }
 
         // Check for castling
-        if (!king.hasMoved) {
+        if (!Chess.hasMoved.get(king)) {
             // Kingside castling
             if (!isSquareBlocked(file, rank, board, king)
                     && canCastleKingside(board)) {
@@ -243,8 +246,7 @@ public class CheckMate {
         return moves;
     }
 
-    public static void checkKnightMove(char startFile, int startRank, ArrayList<String> moves,
-            char endFile, ArrayList<ReturnPiece> board) {
+    public static void checkKnightMove(char startFile, int startRank, ArrayList<String> moves, char endFile, int endRank, ArrayList<ReturnPiece> board) {
 
         // Check if target square is on the board
         if (endFile < 'A' || endFile > 'H' || startRank < 1 || startRank > 8) {
@@ -258,8 +260,8 @@ public class CheckMate {
 
         // Check if target square contains enemy piece
         else {
-            ReturnPiece endPiece = Chess.getPieceAt(endFile + "");
-            ReturnPiece knight = Chess.getPieceAt(startFile + startRank);
+            ReturnPiece endPiece = Chess.getPieceAt(endFile + String.valueOf(endRank));
+            ReturnPiece knight = Chess.getPieceAt(startFile + String.valueOf(startRank));
             if (!Chess.isPieceSameColor(endPiece, knight, board)) {
                 moves.add(String.valueOf(startFile) + startRank + endFile + startRank);
             }
