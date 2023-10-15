@@ -125,13 +125,14 @@ public class Chess {
 		addToBoard(PieceType.BK, PieceFile.e, 8);
 		addToBoard(PieceType.BB, PieceFile.f, 8);
 		addToBoard(PieceType.BN, PieceFile.g, 8);
-		addToBoard(PieceType.BR, PieceFile.h, 8);
+		//addToBoard(PieceType.BR, PieceFile.h, 8);
+		addToBoard(PieceType.WP, PieceFile.h, 7);
 
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
 			addToBoard(PieceType.WP, file, 2);
-			addToBoard(PieceType.BP, file, 7);
+			//addToBoard(PieceType.BP, file, 7);
 		}
 
 		currentPlayer = Player.white;
@@ -180,6 +181,8 @@ public class Chess {
 		for (ReturnPiece piece : board) {
 			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
 				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
+					System.out.println("Threatening Piece: " + piece.pieceType + " at " + piece.pieceFile.name()
+							+ piece.pieceRank); // Printing the threatening piece
 					return true;
 				}
 			}
@@ -201,5 +204,18 @@ public class Chess {
 	private static boolean isPieceSameColor(ReturnPiece piece, String position) {
 		ReturnPiece king = Chess.getPieceAt(position);
 		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
+	}
+
+	public static String getKingPos(Player player) {
+		for (ReturnPiece piece : board) {
+			if (piece.pieceType.name().charAt(1) == 'K') {
+				if (isWhitePiece(piece.pieceType) && player == Player.white) {
+					return piece.pieceFile.name() + piece.pieceRank;
+				} else if (!isWhitePiece(piece.pieceType) && player == Player.black) {
+					return piece.pieceFile.name() + piece.pieceRank;
+				}
+			}
+		}
+		return null;
 	}
 }
