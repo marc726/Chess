@@ -69,34 +69,38 @@ public class Chess {
 	 *         details of
 	 *         the contents of the returned ReturnPlay instance.
 	 */
-	public static ReturnPlay play(String move) {
+	public static ReturnPlay play(String move) {               //move priority illegal move -> draw -> reset/resign -> checkmate/check 
 
 		ReturnPlay result = new ReturnPlay();
+		move = move.toLowerCase().trim();
 		
-
-		// Handle draw requests
-		boolean requestingDraw = move.endsWith(" draw?");
-		if (requestingDraw) {
-			move = move.substring(0, move.length() - 6).trim(); // Remove " draw?" from the move
-		}
-
 		// Check if the input format is valid after checking for "resign, reset"
 		if (!InputValidation.inputCheck(move)) {
 			result.message = ReturnPlay.Message.ILLEGAL_MOVE;
-			return result;
 		}
 
-			// Process move
-	
+		// Process move
+		if(!move.equals("resign") && !move.equals("reset")){
 			result.message = ProcessMove.processMove(move);
-			result.piecesOnBoard = new ArrayList<>(board); 
+		}
 
-		// Handle draw requests at the end of the move processing
-		if (requestingDraw && result.message == null) { // only set draw message if there isn't another message already
-														// set
+		// Handle draw after a legal move is made
+		if (move.endsWith(" draw?")){
 			result.message = ReturnPlay.Message.DRAW;
 		}
 
+		// check for reset and resign requests
+		if (move.equals("resign")) {
+			if (currentPlayer == Player.white) {
+				result.message = ReturnPlay.Message.RESIGN_BLACK_WINS;
+			} else {
+				result.message = ReturnPlay.Message.RESIGN_WHITE_WINS;
+			}
+		} else if (move.equals("reset")) {
+			start();
+		}
+
+		result.piecesOnBoard = new ArrayList<>(board); 
 		return result;
 	}
 

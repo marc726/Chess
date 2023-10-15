@@ -64,7 +64,7 @@ public class Castle {
                 return false;
             }
             if (Chess.hasMoved(Chess.getPieceAt("a" + king.pieceRank))) {
-                System.out.println("Rook hasn't moved");
+                System.out.println("Rook has moved");
                 return false;
             }
         }

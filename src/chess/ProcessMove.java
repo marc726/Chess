@@ -7,6 +7,11 @@ public class ProcessMove {
     
 
     public static ReturnPlay.Message processMove(String move) {
+
+		if (!InputValidation.inputCheck(move)) {
+			return ReturnPlay.Message.ILLEGAL_MOVE;
+		}
+
 		String moveFrom = move.substring(0, 2); //example: "a1 a2" -> "a1" "a2"
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
@@ -35,7 +40,7 @@ public class ProcessMove {
 		}
 
 		    // Check if the piece is a king
-			if (movingPiece.pieceType == PieceType.WK || movingPiece.pieceType == PieceType.BK) {
+			if (movingPiece != null && (movingPiece.pieceType == PieceType.WK || movingPiece.pieceType == PieceType.BK)) {
 				if (Chess.isSquareAttacked(moveTo, Chess.board, movingPiece)) {
 					return ReturnPlay.Message.ILLEGAL_MOVE;
 				}

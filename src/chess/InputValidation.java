@@ -4,7 +4,7 @@ public class InputValidation {
     
     public static boolean inputCheck(String move){
 
-        if (move == null){
+        if (move.length() < 5){
             return false;
         }
 
@@ -25,6 +25,6 @@ public class InputValidation {
     }
 
     private static boolean isValidInputFormat(String input) {
-		return input.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?( draw\\?| resign| reset)?$");
+		return input.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?( draw\\?)?$");
 	}
 }
