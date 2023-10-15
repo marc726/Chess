@@ -85,7 +85,7 @@ public class Chess {
 		}
 
 		// Handle draw after a legal move is made
-		if (move.endsWith(" draw?")){
+		if ((result.message != ReturnPlay.Message.ILLEGAL_MOVE) && (move.endsWith(" draw?" ))) {
 			result.message = ReturnPlay.Message.DRAW;
 		}
 
@@ -166,7 +166,7 @@ public class Chess {
 		return null;
 	}
 
-
+	//already checked if piece is null
 	public static void movePiece(ReturnPiece piece, String moveTo) {
 		hasMoved.put(piece, true);
 		lastMove = piece.pieceFile.name() + piece.pieceRank + " " + moveTo; // Store the last move

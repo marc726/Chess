@@ -48,8 +48,12 @@ public class ProcessMove {
 		ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
 
 		// Make the move
-		Chess.movePiece(movingPiece, moveTo);
-	
+		if (movingPiece == null) {
+			return ReturnPlay.Message.ILLEGAL_MOVE;
+		}else{
+			Chess.movePiece(movingPiece, moveTo);
+		}
+		
 		// Check if the king is in check after making the move
 		if (Chess.isSquareAttacked(Chess.getKingPos(Chess.currentPlayer), Chess.board, movingPiece)) {
 			// If the king is in check, revert the move
