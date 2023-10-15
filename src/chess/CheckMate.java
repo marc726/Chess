@@ -7,6 +7,131 @@ import chess.ReturnPiece.PieceFile;
 import chess.ReturnPiece.PieceType;
 
 public class CheckMate {
+
+    public static boolean isPlayerInCheckmate(ArrayList<ReturnPiece> board, Chess.Player currentPlayer) {
+        // Check if the king is in check
+        if (isKingInCheck(board, currentPlayer)) {
+            // Check if there are no legal moves left for the current player that would get the king out of check
+            for (ReturnPiece piece : board) {
+                if ((currentPlayer == Chess.Player.white && piece.pieceType.name().startsWith("W")) ||
+                    (currentPlayer == Chess.Player.black && piece.pieceType.name().startsWith("B"))) {
+                    ArrayList<String> legalMoves = generateLegalMovesForPiece(piece, board);
+                    for (String move : legalMoves) {
+                        // Create a temporary board to simulate the move
+                        ArrayList<ReturnPiece> tempBoard = simulateMove(board, piece, move);
+                        // If the king is not in check after this move, then it's not checkmate
+                        if (isKingInCheck(tempBoard, currentPlayer)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;  // No legal moves found that can get the king out of check
+        }
+        return false;
+    }
+
+    public static boolean isKingInCheck(ArrayList<ReturnPiece> board, Chess.Player currentPlayer) {
+        // Identify the position of the king
+        String kingPosition = null;
+        for (ReturnPiece piece : board) {
+            if ((currentPlayer == Chess.Player.white && piece.pieceType == ReturnPiece.PieceType.WK) ||
+                (currentPlayer == Chess.Player.black && piece.pieceType == ReturnPiece.PieceType.BK)) {
+                kingPosition = piece.pieceFile.name() + piece.pieceRank;
+                break;
+            }
+        }
+
+        // Check all potential attacking moves from the opposing player
+        for (ReturnPiece piece : board) {
+            if ((currentPlayer == Chess.Player.white && piece.pieceType.name().startsWith("B")) ||
+                (currentPlayer == Chess.Player.black && piece.pieceType.name().startsWith("W"))) {
+                // Generate all legal moves for this piece
+                // We would call the appropriate legal move method for each piece type here
+                ArrayList<String> legalMoves = generateLegalMovesForPiece(piece, board);
+                if (legalMoves.contains(kingPosition)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    // Placeholder for the generateLegalMovesForPiece method. This method will need to be implemented
+    // to call the appropriate method (like isLegalPawnMove, isLegalRookMove, etc.) based on the piece type.
+    private static ArrayList<String> generateLegalMovesForPiece(ReturnPiece piece, ArrayList<ReturnPiece> board) {
+        ArrayList<String> legalMoves = new ArrayList<>();
+
+        switch (piece.pieceType) {
+            case WP:  
+            case BP:  
+                legalMoves.addAll(generateLegalPawnMoves(piece, board));
+                break;
+            case WR:  
+            case BR: 
+                legalMoves.addAll(generateLegalRookMoves(piece, board));
+                break;
+            case WN:    
+            case BN:  
+                legalMoves.addAll(generateLegalKnightMoves(piece, board));
+                break;
+            case WB:  
+            case BB:  
+                legalMoves.addAll(generateLegalBishopMoves(piece, board));
+                break;
+            case WQ:  
+            case BQ: 
+                legalMoves.addAll(generateLegalQueenMoves(piece, board));
+                break;
+            case WK:  
+            case BK:  
+                legalMoves.addAll(generateLegalKingMoves(piece, board));
+                break;
+        }
+
+        return legalMoves;
+    }
+
+    // Placeholder for the simulateMove method. This method will apply the move on a copy of the board and return the updated board.
+    private static ArrayList<ReturnPiece> simulateMove(ArrayList<ReturnPiece> board, ReturnPiece piece, String move) {
+        ArrayList<ReturnPiece> tempBoard = new ArrayList<>(board);
+        // Implement the logic to update the tempBoard based on the move
+        return tempBoard;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static ReturnPlay checkMate() {
         ReturnPlay check = new ReturnPlay();
 
@@ -58,7 +183,8 @@ public class CheckMate {
 
     // Check if the player's king has any valid moves
     private static boolean hasValidMovesForKing(String kingPos) {
-        ArrayList<String> moves = LegalCheck.getLegalMovesForKing(kingPos);
+        ReturnPiece kingPiece = Chess.getPieceAt(kingPos); // Fetch the ReturnPiece object for the king
+        ArrayList<String> moves = LegalCheck.getLegalMovesForKing(kingPiece, Chess.board); // Pass the object to the method
         for (String move : moves) {
             if (makeMove(move)) { // Make move tentatively
                 undoMove(); // Undo move
@@ -131,4 +257,49 @@ public class CheckMate {
             return !Chess.isWhitePiece(piece.pieceType);
         }
     }
+
+
+
+
+    public static ArrayList<String> getLegalMoves(ReturnPiece piece, ArrayList<ReturnPiece> board) {
+        ArrayList<String> legalMoves = new ArrayList<>();
+    
+        String position = piece.pieceFile.name() + piece.pieceRank;
+    
+        switch (piece.pieceType) {
+            case WP:
+            case BP:
+                // Add all legal pawn moves
+                legalMoves.addAll(getLegalPawnMoves(piece, position, board));
+                break;
+            case WR:
+            case BR:
+                // Add all legal rook moves
+                legalMoves.addAll(getLegalRookMoves(piece, position, board));
+                break;
+            case WN:
+            case BN:
+                // Add all legal knight moves
+                legalMoves.addAll(getLegalKnightMoves(piece, position, board));
+                break;
+            case WB:
+            case BB:
+                // Add all legal bishop moves
+                legalMoves.addAll(getLegalBishopMoves(piece, position, board));
+                break;
+            case WQ:
+            case BQ:
+                // Add all legal queen moves
+                legalMoves.addAll(getLegalQueenMoves(piece, position, board));
+                break;
+            case WK:
+            case BK:
+                // Add all legal king moves
+                legalMoves.addAll(getLegalMovesForKing(piece, board));
+                break;
+        }
+    
+        return legalMoves;
+    }
+
 }

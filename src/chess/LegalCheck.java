@@ -326,4 +326,40 @@ public class LegalCheck {
   return true;
   }
 
+
+  public static ArrayList<String> getLegalMovesForKing(ReturnPiece king, ArrayList<ReturnPiece> board) {
+    ArrayList<String> legalMoves = new ArrayList<String>();
+    char file = king.pieceFile.name().charAt(0);
+    int rank = king.pieceRank;
+
+    // Check all squares around the king
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            // Skip the square the king is on
+            if (i == 0 && j == 0) {
+                continue;
+            }
+
+            // Calculate the file and rank of the square to check
+            char checkFile = (char) (file + i);
+            int checkRank = rank + j;
+
+            // Check if the square is on the board
+            if (checkFile < 'A' || checkFile > 'H' || checkRank < 1 || checkRank > 8) {
+                continue;
+            }
+
+            // Get the piece at the square
+            ReturnPiece pieceAtSquare = Chess.getPieceAt("" + checkFile + checkRank);
+
+            // Check if the square is empty or contains an enemy piece
+            if (pieceAtSquare == null || !Chess.isPieceSameColor(king, pieceAtSquare, board)) {
+                legalMoves.add("" + file + rank + checkFile + checkRank);
+            }
+        }
+    }
+
+    return legalMoves;
+}
+
 }

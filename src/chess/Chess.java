@@ -228,6 +228,24 @@ public class Chess {
 		return null;
 	}
 
+	public static boolean isPieceSameColor(ReturnPiece piece1, ReturnPiece piece2, ArrayList<ReturnPiece> board) {
+		if (piece1 == null || piece2 == null) {
+			return false;
+		}
+	
+		for (ReturnPiece piece : board) {
+			if (piece.pieceFile == piece1.pieceFile && piece.pieceRank == piece1.pieceRank) {
+				if (piece.pieceType.name().charAt(0) == piece2.pieceType.name().charAt(0)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	
+		return false;
+	}
+
 
 	public static boolean isMoveValidBasedOnColor(ReturnPiece movingPiece, String position) {
 		ReturnPiece pieceAtPosition = Chess.getPieceAt(position);
