@@ -54,6 +54,9 @@ public class LegalCheck {
 
   private static boolean isLegalPawnMove(ReturnPiece pawn, String start, String end, ArrayList<ReturnPiece> board) {
 
+    if (!Chess.isMoveValidBasedOnColor(pawn, end)) {
+      return false; // Invalid move based on piece color
+    }
     // Direction of the move depends on the piece color
     int direction = (pawn.pieceType == PieceType.WP) ? 1 : -1;
 
@@ -107,6 +110,9 @@ public class LegalCheck {
   private static boolean isLegalRookMove(ReturnPiece rook, String start, String end, ArrayList<ReturnPiece> board) {
     // Rook move rules
     // Parse files
+    if (!Chess.isMoveValidBasedOnColor(rook, end)) {
+      return false; // Invalid move based on piece color
+    }
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -127,7 +133,10 @@ public class LegalCheck {
 
   private static boolean isLegalKnightMove(ReturnPiece knight, String start, String end, ArrayList<ReturnPiece> board) {
     // parse again
-    
+    if (!Chess.isMoveValidBasedOnColor(knight, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -146,7 +155,11 @@ public class LegalCheck {
   }
 
   private static boolean isLegalBishopMove(ReturnPiece bishop, String start, String end, ArrayList<ReturnPiece> board) {
-    // parse
+    
+    if (!Chess.isMoveValidBasedOnColor(bishop, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -166,7 +179,10 @@ public class LegalCheck {
   }
 
   private static boolean isLegalQueenMove(ReturnPiece queen, String start, String end, ArrayList<ReturnPiece> board) {
-    // queen can move like rook or bishop
+    if (!Chess.isMoveValidBasedOnColor(queen, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     if (isLegalRookMove(queen, start, end, board) || isLegalBishopMove(queen, start, end, board)) {
       return true;
     }
@@ -175,7 +191,11 @@ public class LegalCheck {
   }
 
   private static boolean isLegalKingMove(ReturnPiece king, String start, String end, ArrayList<ReturnPiece> board) {
-    // parse
+    
+    if (!Chess.isMoveValidBasedOnColor(king, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -286,7 +306,24 @@ public class LegalCheck {
     }
 
     // diagonal
-    return true;
+    else if (Math.abs(startFile - endFile) == Math.abs(startRank - endRank)) {
+      // determine the direction of the diagonal
+      int fileDirection = (startFile < endFile) ? 1 : -1;  // left to right or right to left
+      int rankDirection = (startRank < endRank) ? 1 : -1;  // top to bottom or bottom to top
+
+      // iterate over the diagonal squares
+      char currentFile = (char) (startFile + fileDirection);
+      int currentRank = startRank + rankDirection;
+      while (currentFile != endFile && currentRank != endRank) {
+          if (isSquareOccupied(Character.toString(currentFile) + currentRank, board)) {
+              return false;  // path is blocked
+          }
+          currentFile += fileDirection;
+          currentRank += rankDirection;
+      }
+  }
+
+  return true;
   }
 
 }

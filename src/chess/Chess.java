@@ -112,9 +112,9 @@ public class Chess {
 		addToBoard(PieceType.WR, PieceFile.a, 1); 
 		addToBoard(PieceType.WN, PieceFile.b, 1);
 		addToBoard(PieceType.WB, PieceFile.c, 1);
-		addToBoard(PieceType.WQ, PieceFile.d, 3);
+		addToBoard(PieceType.WQ, PieceFile.d, 1);
 		addToBoard(PieceType.WK, PieceFile.e, 1);
-		addToBoard(PieceType.WB, PieceFile.f, 1);
+		//addToBoard(PieceType.WB, PieceFile.f, 1);
 		addToBoard(PieceType.WN, PieceFile.g, 1);
 		addToBoard(PieceType.WR, PieceFile.h, 1);
 
@@ -125,13 +125,13 @@ public class Chess {
 		addToBoard(PieceType.BK, PieceFile.e, 8);
 		addToBoard(PieceType.BB, PieceFile.f, 8);
 		addToBoard(PieceType.BN, PieceFile.g, 8);
-		//addToBoard(PieceType.BR, PieceFile.h, 8);
-		addToBoard(PieceType.WP, PieceFile.h, 7);
+		addToBoard(PieceType.BR, PieceFile.h, 8);
+
 
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
-			addToBoard(PieceType.WP, file, 2);
+			//addToBoard(PieceType.WP, file, 2);
 			//addToBoard(PieceType.BP, file, 7);
 		}
 
@@ -151,15 +151,17 @@ public class Chess {
 
 	// helper methods
 
+
 	public static ReturnPiece getPieceAt(String position) {
 		for (ReturnPiece piece : board) {
-			if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) { // check if moveFrom ==
-																				// returnPiece.location (file + rank)
+			String piecePosition = piece.pieceFile.name() + piece.pieceRank;
+			if (piecePosition.equals(position)) {
 				return piece;
 			}
 		}
 		return null;
 	}
+
 
 	public static void movePiece(ReturnPiece piece, String moveTo) {
 		hasMoved.put(piece, true);
@@ -168,21 +170,22 @@ public class Chess {
 		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
 	}
 
+
 	public static boolean hasMoved(ReturnPiece piece) {
 		return hasMoved.getOrDefault(piece, false); // Check if the piece has moved
 	}
 
+
 	public static boolean isWhitePiece(PieceType pieceType) {
 		return pieceType.name().charAt(0) == 'W';
 	}
+
 
 	public static boolean isInCheck(String position) {
 		// Check if the king is in check
 		for (ReturnPiece piece : board) {
 			if (piece.pieceType.name().charAt(1) != 'K') { // Check if the piece is not a king
 				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
-					System.out.println("Threatening Piece: " + piece.pieceType + " at " + piece.pieceFile.name()
-							+ piece.pieceRank); // Printing the threatening piece
 					return true;
 				}
 			}
@@ -190,20 +193,26 @@ public class Chess {
 		return false;
 	}
 
-	public static boolean isSquareAttacked(String position, ArrayList<ReturnPiece> board) {
-		for (ReturnPiece piece : board) {
-			if (!isPieceSameColor(piece, position)) {
-				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + position, board)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
-	private static boolean isPieceSameColor(ReturnPiece piece, String position) {
-		ReturnPiece king = Chess.getPieceAt(position);
-		return isWhitePiece(piece.pieceType) == isWhitePiece(king.pieceType);
+	public static boolean isSquareAttacked(String moveToPosition, ArrayList<ReturnPiece> board, ReturnPiece movingPiece) {
+    for (ReturnPiece piece : board) {
+        if (piece.equals(movingPiece)) continue; // Exclude the moving piece from the check
+        if (!isPieceSameColor(piece, movingPiece)) {
+            if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + moveToPosition, board)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+	
+	private static boolean isPieceSameColor(ReturnPiece threatPiece, ReturnPiece movingPiece) {
+		
+		if (movingPiece == null || threatPiece == null) {
+			return false;
+		}
+
+		return isWhitePiece(movingPiece.pieceType) == isWhitePiece(threatPiece.pieceType);
 	}
 
 	public static String getKingPos(Player player) {
@@ -214,6 +223,29 @@ public class Chess {
 				} else if (!isWhitePiece(piece.pieceType) && player == Player.black) {
 					return piece.pieceFile.name() + piece.pieceRank;
 				}
+			}
+		}
+		return null;
+	}
+
+
+	public static boolean isMoveValidBasedOnColor(ReturnPiece movingPiece, String position) {
+		ReturnPiece pieceAtPosition = Chess.getPieceAt(position);
+		
+		// Case 1: The destination square is empty
+		if (pieceAtPosition == null) {
+			return true;
+		}
+		
+		// Case 2 & 3: Compare the colors of the moving piece and the piece at the destination
+		boolean isSameColor = isWhitePiece(movingPiece.pieceType) == isWhitePiece(pieceAtPosition.pieceType);
+		return !isSameColor; // If they are of the same color, return false (invalid move). Otherwise, return true.
+	}
+
+	public static String findPiecePosition(ReturnPiece targetPiece, ArrayList<ReturnPiece> board) {
+		for (ReturnPiece piece : board) {
+			if (piece.equals(targetPiece)) {
+				return piece.pieceFile.name() + piece.pieceRank;
 			}
 		}
 		return null;

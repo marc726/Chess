@@ -1,6 +1,7 @@
 package chess;
 
 import chess.Chess.Player;
+import chess.ReturnPiece.PieceType;
 
 public class ProcessMove {
     
@@ -31,36 +32,41 @@ public class ProcessMove {
 			return null;
 		}
 
-        //whites move
+		    // Check if the piece is a king
+			if (movingPiece.pieceType == PieceType.WK || movingPiece.pieceType == PieceType.BK) {
+				if (Chess.isSquareAttacked(moveTo, Chess.board, movingPiece)) {
+					return ReturnPlay.Message.ILLEGAL_MOVE;
+				}
+			}
+        
+		// whites move
 		if (Chess.currentPlayer == Player.white) {
-            ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
-            if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
-                // The space is occupied by a black piece.
-                Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
-            }
-            if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
-                Chess.movePiece(movingPiece, moveTo); // Then move the piece
-                Chess.currentPlayer = Player.black; // Switch player
-                return null;  // Successfully moved so no msg needed
-            } else {
-                return ReturnPlay.Message.ILLEGAL_MOVE;
-            }
-
-
-
-        } else {  //blacks move
+			ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
+			if (pieceAtTarget != null && !Chess.isWhitePiece(pieceAtTarget.pieceType)) {
+				// The space is occupied by a black piece.
+				Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
+			}
+			if (movingPiece != null && Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
+				Chess.movePiece(movingPiece, moveTo); // Then move the piece
+				Chess.currentPlayer = Player.black; // Switch player
+				return null;  // Successfully moved so no message is needed
+			} else {
+				return ReturnPlay.Message.ILLEGAL_MOVE;
+			}
+		} else { //blacks move
+			ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
+			if (pieceAtTarget != null && Chess.isWhitePiece(pieceAtTarget.pieceType)) {
+				// The space is occupied by a white piece.
+				Chess.board.remove(pieceAtTarget);  // Remove the taken piece first
+			}
 			if (movingPiece != null && !Chess.isWhitePiece(movingPiece.pieceType) && LegalCheck.isLegalMove(move, Chess.board)) {
-				ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
-                if (pieceAtTarget != null && Chess.isWhitePiece(pieceAtTarget.pieceType)) {
-                    // The space is occupied by a black piece.
-                    Chess.board.remove(pieceAtTarget);  // Assuming you want to remove the piece.
-                }  
-                Chess.movePiece(movingPiece, moveTo);
+				Chess.movePiece(movingPiece, moveTo); // Then move the piece
 				Chess.currentPlayer = Player.white; // Switch player
-				return null;  // Successfully moved so no msg needed
+				return null;  // Successfully moved so no message is needed
 			} else {
 				return ReturnPlay.Message.ILLEGAL_MOVE;
 			}
 		}
 	}
 }
+
