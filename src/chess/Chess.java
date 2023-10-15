@@ -120,7 +120,7 @@ public class Chess {
 		addToBoard(PieceType.WK, PieceFile.e, 1);
 		//addToBoard(PieceType.WB, PieceFile.f, 1);
 		//addToBoard(PieceType.WN, PieceFile.g, 1);
-		addToBoard(PieceType.WR, PieceFile.h, 1);
+		//addToBoard(PieceType.WR, PieceFile.h, 1);
 		addToBoard(PieceType.WR, PieceFile.h, 7);
 
 		//addToBoard(PieceType.BR, PieceFile.a, 8);
