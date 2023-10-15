@@ -125,14 +125,14 @@ public class CheckMate {
         for (int i = -1; i <= 1; i += 2) {
             char endFile = (char) (file + i);
             if (isSquareOccupiedByEnemy(endFile, endRank, board, pawn)) {
-                moves.add(file + startRank + endFile + endRank);
+                moves.add(String.valueOf(file) + startRank + String.valueOf(endFile) + endRank);
             }
         }
 
         // Add en passant if applicable
         if (EnPassant.canEnPassant(pawn, board)) {
             char epFile = EnPassant.enPassantFile;
-            moves.add(file + startRank + epFile + (startRank + direction));
+            moves.add(String.valueOf(file) + startRank + epFile + (startRank + direction));
         }
 
         return moves;
@@ -146,14 +146,14 @@ public class CheckMate {
         // Check horizontal moves
         for (char f = 'A'; f <= 'H'; f++) {
             if (f != file && !isSquareBlocked(f, rank, board, rook)) {
-                moves.add(file + rank + f + rank);
+                moves.add(String.valueOf(file) + rank + String.valueOf(f) + rank);
             }
         }
 
         // Check vertical moves
         for (int r = 1; r <= 8; r++) {
             if (r != rank && !isSquareBlocked(file, r, board, rook)) {
-                moves.add(file + rank + file + r);
+                moves.add(String.valueOf(file) + rank + String.valueOf(file) + r);
             }
         }
 
@@ -188,9 +188,9 @@ public class CheckMate {
                     char endFile = (char) (file + i * k);
                     int endRank = rank + j * k;
                     if (isSquareEmpty(endFile, endRank, board)) {
-                        moves.add(file + rank + endFile + endRank);
+                        moves.add(String.valueOf(file) + rank + endFile + endRank);
                     } else if (isSquareOccupiedByEnemy(endFile, endRank, board, bishop)) {
-                        moves.add(file + rank + endFile + endRank);
+                        moves.add(String.valueOf(file) + rank + endFile + endRank);
                         break; // Stop in this diagonal direction if blocked
                     } else {
                         break; // Stop if blocked by friendly piece
@@ -221,7 +221,7 @@ public class CheckMate {
                 int endRank = rank + i;
                 char endFile = (char) (file + j);
                 if (isSquareEmpty(endFile, endRank, board)) {
-                    moves.add(file + rank + endFile + endRank);
+                    moves.add(String.valueOf(file) + rank + endFile + endRank);
                 }
             }
         }
@@ -253,7 +253,7 @@ public class CheckMate {
 
         // Check if target square is empty
         if (Chess.getPieceAt(endFile + "") == null) {
-            moves.add(startFile + startRank + endFile + startRank);
+            moves.add(String.valueOf(startFile) + startRank + endFile + startRank);
         }
 
         // Check if target square contains enemy piece
@@ -261,7 +261,7 @@ public class CheckMate {
             ReturnPiece endPiece = Chess.getPieceAt(endFile + "");
             ReturnPiece knight = Chess.getPieceAt(startFile + startRank);
             if (!Chess.isPieceSameColor(endPiece, knight, board)) {
-                moves.add(startFile + startRank + endFile + startRank);
+                moves.add(String.valueOf(startFile) + startRank + endFile + startRank);
             }
         }
     }
