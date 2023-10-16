@@ -14,6 +14,10 @@ public class ProcessMove {
 		String moveFrom = move.substring(0, 2);
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
+
+		if (!LegalCheck.isLegalMove(move, Chess.board)) {
+			return ReturnPlay.Message.ILLEGAL_MOVE;
+		}
 	
 		// Check if the player is moving their own piece
 		if (movingPiece == null || Chess.isWhitePiece(movingPiece.pieceType) != (Chess.currentPlayer == Player.white)) {

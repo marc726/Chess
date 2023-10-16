@@ -69,7 +69,8 @@ public class Chess {
 	 *         details of
 	 *         the contents of the returned ReturnPlay instance.
 	 */
-	public static ReturnPlay play(String move) {               //move priority illegal move -> draw -> reset/resign -> checkmate/check 
+	public static ReturnPlay play(String move) {   
+		            //move priority illegal move -> draw -> reset/resign -> checkmate/check 
 
 		ReturnPlay result = new ReturnPlay();
 		move = move.toLowerCase().trim();
@@ -113,7 +114,7 @@ public class Chess {
 		currentPlayer = Player.white;
 
 		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
-		addToBoard(PieceType.WR, PieceFile.a, 1); 
+		//addToBoard(PieceType.WR, PieceFile.a, 1); 
 		//addToBoard(PieceType.WN, PieceFile.b, 1);
 		//addToBoard(PieceType.WB, PieceFile.c, 1);
 		//addToBoard(PieceType.WQ, PieceFile.d, 1);
@@ -121,7 +122,7 @@ public class Chess {
 		//addToBoard(PieceType.WB, PieceFile.f, 1);
 		//addToBoard(PieceType.WN, PieceFile.g, 1);
 		//addToBoard(PieceType.WR, PieceFile.h, 1);
-		addToBoard(PieceType.WR, PieceFile.h, 7);
+		//addToBoard(PieceType.WR, PieceFile.h, 7);
 
 		//addToBoard(PieceType.BR, PieceFile.a, 8);
 		//addToBoard(PieceType.BN, PieceFile.b, 8);
@@ -132,7 +133,8 @@ public class Chess {
 		//addToBoard(PieceType.BN, PieceFile.g, 8);
 		//addToBoard(PieceType.BR, PieceFile.h, 8);
 
-		addToBoard(PieceType.BP, PieceFile.f, 7);
+		addToBoard(PieceType.BP, PieceFile.f, 4);
+		addToBoard(PieceType.WP, PieceFile.g, 2);
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
@@ -200,10 +202,12 @@ public class Chess {
 
 
 	public static boolean isSquareAttacked(String moveToPosition, ArrayList<ReturnPiece> board, ReturnPiece movingPiece) {
-    for (ReturnPiece piece : board) {
+		System.out.println("Checking if square is attacked by " + movingPiece.pieceType + " at " + moveToPosition);
+		for (ReturnPiece piece : board) {
         if (piece.equals(movingPiece)) continue; // Exclude the moving piece from the check
         if (!isPieceSameColor(piece, movingPiece)) {
             if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + moveToPosition, board)) {
+				System.out.println("Square is attacked by " + piece.pieceType + " at " + piece.pieceFile.name() + piece.pieceRank);
                 return true;
             }
         }
