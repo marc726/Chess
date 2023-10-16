@@ -42,6 +42,15 @@ public class ProcessMove {
 		// Check for pawn promotion:
 		if (PawnPromo.checkPawnPromotion(move, Chess.board)) {
 			PawnPromo.promotePawn(move, Chess.board);
+
+			// Check if opponent king is in check/checkmate after pawn promotion
+			if (CheckMate.isInCheckMate(Chess.currentPlayer, Chess.board)) {
+				return (Chess.currentPlayer == Player.white) ? ReturnPlay.Message.CHECKMATE_WHITE_WINS : ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+			} else if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
+				return ReturnPlay.Message.CHECK;
+			}
+
+			// Switch player after successful pawn promotion
 			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 			return null;  // Pawn successfully promoted so no message is needed
 		}

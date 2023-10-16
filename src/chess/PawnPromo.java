@@ -84,7 +84,7 @@ public class PawnPromo {
 		PieceType promoType;
 	
 		if (move.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?$") || move.matches("^[a-h][1-8] [a-h][1-8]( [NBRQ])?$|^draw$|^resign$|^reset$")) {
-			char promotionChar = move.charAt(6);  // Get the promotion character from the move string
+			char promotionChar = 'Q';  // Get the promotion character from the move string
 			switch (promotionChar) {
 				case 'N':
 					promoType = (pawn.pieceType == PieceType.WP) ? PieceType.WN : PieceType.BN;
@@ -113,5 +113,7 @@ public class PawnPromo {
 		}
 		// Add promotion piece to board at the end position
 		Chess.addToBoard(promoType, PieceFile.valueOf(move.substring(3, 4)), Character.getNumericValue(move.charAt(4)));
+
+		
 	}
 }
