@@ -9,12 +9,8 @@ public class ProcessMove {
     
 
     public static ReturnPlay.Message processMove(String move) {
-		if (!InputValidation.inputCheck(move)) {
-			return ReturnPlay.Message.ILLEGAL_MOVE;
-		}
 
-
-	
+		
 		String moveFrom = move.substring(0, 2);
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
@@ -23,7 +19,6 @@ public class ProcessMove {
 		if (movingPiece == null || Chess.isWhitePiece(movingPiece.pieceType) != (Chess.currentPlayer == Player.white)) {
 			return ReturnPlay.Message.ILLEGAL_MOVE;
 		}
-
 
 
 		// Check for castling moves:
@@ -40,7 +35,6 @@ public class ProcessMove {
 
 
 
-
 		// Check for pawn promotion:
 		if (PawnPromo.checkPawnPromotion(move, Chess.board)) {
 			PawnPromo.promotePawn(move, Chess.board);
@@ -48,8 +42,6 @@ public class ProcessMove {
 			return null;  // Pawn successfully promoted so no message is needed
 		}
 	
-
-
 
 
 		// Save the piece at the target location
@@ -72,7 +64,6 @@ public class ProcessMove {
 
 
 
-
 		//check if opponent king is in check/checkmate after move
 		if (CheckMate.isInCheckMate(Chess.currentPlayer, Chess.board)) {
 			return (Chess.currentPlayer == Player.white) ? ReturnPlay.Message.CHECKMATE_WHITE_WINS : ReturnPlay.Message.CHECKMATE_BLACK_WINS;
@@ -84,9 +75,9 @@ public class ProcessMove {
 
 
 
-
 		// Switch player after a successful move
 		Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
+
 		return null;  // Successfully moved so no message is needed
 	}
 }
