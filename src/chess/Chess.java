@@ -1,3 +1,8 @@
+/*
+ * Authors:
+ *  		* Marcc Rizzolo (NETID)
+ * 		    * Bhavya Patel (bsp75)
+ */
 package chess;
 
 import java.util.ArrayList;
