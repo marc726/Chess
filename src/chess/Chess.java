@@ -114,7 +114,7 @@ public class Chess {
 		currentPlayer = Player.white;
 
 		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
-		//addToBoard(PieceType.WR, PieceFile.a, 1); 
+		addToBoard(PieceType.WR, PieceFile.a, 1); 
 		//addToBoard(PieceType.WN, PieceFile.b, 1);
 		//addToBoard(PieceType.WB, PieceFile.c, 1);
 		//addToBoard(PieceType.WQ, PieceFile.d, 1);
@@ -122,7 +122,7 @@ public class Chess {
 		//addToBoard(PieceType.WB, PieceFile.f, 1);
 		//addToBoard(PieceType.WN, PieceFile.g, 1);
 		//addToBoard(PieceType.WR, PieceFile.h, 1);
-		//addToBoard(PieceType.WR, PieceFile.h, 7);
+		addToBoard(PieceType.WR, PieceFile.h, 7);
 
 		//addToBoard(PieceType.BR, PieceFile.a, 8);
 		//addToBoard(PieceType.BN, PieceFile.b, 8);
@@ -133,7 +133,7 @@ public class Chess {
 		//addToBoard(PieceType.BN, PieceFile.g, 8);
 		//addToBoard(PieceType.BR, PieceFile.h, 8);
 
-		addToBoard(PieceType.BP, PieceFile.f, 4);
+		addToBoard(PieceType.BP, PieceFile.f, 7);
 		addToBoard(PieceType.WP, PieceFile.g, 2);
 
 		// pawns

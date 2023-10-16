@@ -10,7 +10,7 @@ public class ProcessMove {
 
     public static ReturnPlay.Message processMove(String move) {
 
-		
+		System.out.println("Current player: " + Chess.currentPlayer);
 		String moveFrom = move.substring(0, 2);
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
@@ -72,6 +72,7 @@ public class ProcessMove {
 		if (CheckMate.isInCheckMate(Chess.currentPlayer, Chess.board)) {
 			return (Chess.currentPlayer == Player.white) ? ReturnPlay.Message.CHECKMATE_WHITE_WINS : ReturnPlay.Message.CHECKMATE_BLACK_WINS;
 		} else if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
+			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 			return ReturnPlay.Message.CHECK;
 		}
 
