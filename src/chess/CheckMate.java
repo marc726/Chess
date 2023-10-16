@@ -15,28 +15,34 @@ public class CheckMate {
      * @param board  The current board state.
      * @return true if the king is in checkmate, false otherwise.
      */
+
+    
     public static boolean isInCheckMate(Chess.Player player, ArrayList<ReturnPiece> board) {
 
         if (!Check.isInCheck(player, board)) {
             return false;  // The king must be in check for a checkmate.
         }
-
+        System.out.println("got past isInCheck");
         //get opposite player king position
         String kingPosition;
         if (player.equals(Chess.Player.white)) {
-            kingPosition = Chess.getKingPos(Chess.Player.black);
+            kingPosition = Chess.getBlackKingPos();
         } else {
-            kingPosition = Chess.getKingPos(Chess.Player.white);
+            kingPosition = Chess.getWhiteKingPos();
         }
 
         // Get the king piece at that position
         ReturnPiece king = Chess.getPieceAt(kingPosition);
+        System.out.println("King at " + kingPosition);
 
         // Check every space around king
         char kingFile = kingPosition.charAt(0);
         int kingRank = Character.getNumericValue(kingPosition.charAt(1));
 
+        System.out.println("Checking king at " + kingPosition);
+
         for (int fileOffset = -1; fileOffset <= 1; fileOffset++) {
+            System.out.println("Checking offset " + fileOffset);
             for (int rankOffset = -1; rankOffset <= 1; rankOffset++) {
                 System.out.println("Checking offset " + fileOffset + " " + rankOffset);
                 // Exclude the square where the king is currently located

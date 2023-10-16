@@ -116,17 +116,24 @@ public class LegalCheck {
   }
 
   private static boolean isLegalRookMove(ReturnPiece rook, String start, String end, ArrayList<ReturnPiece> board) {
+    // Rook move rules
+    // Parse files
+    if (!Chess.isMoveValidBasedOnColor(rook, end)) {
+      return false; // Invalid move based on piece color
+    }
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
+    // check if move is horizontal or vertical
     if (startFile == endFile || startRank == endRank) {
+      // if theres a piece in the way
       if (isPathClear(start, end, board)) {
+        // check of destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, rook.pieceType)) {
-          if (Chess.getPieceAt(end) != null) {
-              removePieceFromBoard(end, board);
-          }
+          ReturnPiece capturedPiece = Chess.getPieceAt(end);
+          Chess.board.remove(capturedPiece);
           return true;
         }
       }
@@ -135,6 +142,11 @@ public class LegalCheck {
   }
 
   private static boolean isLegalKnightMove(ReturnPiece knight, String start, String end, ArrayList<ReturnPiece> board) {
+    // parse again
+    if (!Chess.isMoveValidBasedOnColor(knight, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -143,49 +155,50 @@ public class LegalCheck {
     // if move is L shape (2x1 or 1x2)
     int fileDiff = Math.abs(startFile - endFile); 
     int rankDiff = Math.abs(startRank - endRank);
-
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
-      // check if the move is valid based on piece color
-      if (Chess.isMoveValidBasedOnColor(knight, end)) {
-        if (Chess.getPieceAt(end) != null) { // if there is an enemy piece at the destination
-            removePieceFromBoard(end, board); // remove that enemy piece
-        }
+      // check if destination square is empty
+      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType)) {
         return true;
-      }
-      else {
-        System.out.println("Invalid move based on piece color");
       }
     }
     return false;
-}
+  }
 
 
   private static boolean isLegalBishopMove(ReturnPiece bishop, String start, String end, ArrayList<ReturnPiece> board) {
+    
+    if (!Chess.isMoveValidBasedOnColor(bishop, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
+    // check if move is diagonal
     if (Math.abs(startFile - endFile) == Math.abs(startRank - endRank)) {
+      // if piece in the way
       if (isPathClear(start, end, board)) {
+        // check if destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType)) {
-          if (Chess.getPieceAt(end) != null) {
-              removePieceFromBoard(end, board);
-          }
           return true;
         }
       }
     }
     return false;
-  } 
+  }
+
 
   private static boolean isLegalQueenMove(ReturnPiece queen, String start, String end, ArrayList<ReturnPiece> board) {
+    if (!Chess.isMoveValidBasedOnColor(queen, end)) {
+      return false; // Invalid move based on piece color
+    }
+
     if (isLegalRookMove(queen, start, end, board) || isLegalBishopMove(queen, start, end, board)) {
-      if (Chess.getPieceAt(end) != null) {
-          removePieceFromBoard(end, board);
-      }
       return true;
     }
+
     return false;
   }
 
@@ -206,13 +219,12 @@ public class LegalCheck {
 
     //typical movement logic
     if (fileDiff <= 1 && rankDiff <= 1) {
+      // dest is empty
       if (!isSquareOccupiedBySameColor(end, board, king.pieceType)) {
-        if (Chess.getPieceAt(end) != null) {
-            removePieceFromBoard(end, board);
-        }
         return true;
       }
     }
+
 
     //castle movement logic
     if (rankDiff == 0 && (fileDiff == 2 || fileDiff == 3)) {

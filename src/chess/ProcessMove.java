@@ -78,9 +78,7 @@ public class ProcessMove {
 
 
 		//check if opponent king is in check/checkmate after move
-		if (CheckMate.isInCheckMate(Chess.currentPlayer, Chess.board)) {
-			return (Chess.currentPlayer == Player.white) ? ReturnPlay.Message.CHECKMATE_WHITE_WINS : ReturnPlay.Message.CHECKMATE_BLACK_WINS;
-		} else if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
+		if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
 			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 			return ReturnPlay.Message.CHECK;
 		}
