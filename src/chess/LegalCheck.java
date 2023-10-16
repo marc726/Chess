@@ -11,7 +11,7 @@ public class LegalCheck {
     // Parse move
     String startPos = move.substring(0, 2);
     String endPos = move.substring(3, 5);
-    System.out.println("Checking if " + startPos + " to " + endPos + " is legal");
+    //System.out.println("Checking if " + startPos + " to " + endPos + " is legal");
     // Get piece that is moving
     ReturnPiece movingPiece = null;
     for (ReturnPiece piece : board) {
@@ -66,12 +66,16 @@ public class LegalCheck {
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
-    System.out.println(endFile + " " + endRank + " " + startFile + " " + startRank);
-    System.out.println("startFile - endFile = " + (startFile - endFile));
+    //System.out.println(endFile + " " + endRank + " " + startFile + " " + startRank);
+    //System.out.println("startFile - endFile = " + (startFile - endFile));
 
     if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
       // Check for normal capture
       if (isSquareOccupiedByOpponent(end, board, pawn.pieceType)) {
+          // Also, remove the captured piece
+          ReturnPiece capturedPiece = Chess.getPieceAt(end);
+          System.out.println("Captured piece: " + capturedPiece.pieceType);
+          Chess.board.remove(capturedPiece);
           return true;
       }
       // Check for en passant
@@ -112,22 +116,17 @@ public class LegalCheck {
   }
 
   private static boolean isLegalRookMove(ReturnPiece rook, String start, String end, ArrayList<ReturnPiece> board) {
-    // Rook move rules
-    // Parse files
-    if (!Chess.isMoveValidBasedOnColor(rook, end)) {
-      return false; // Invalid move based on piece color
-    }
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
-    // check if move is horizontal or vertical
     if (startFile == endFile || startRank == endRank) {
-      // if theres a piece in the way
       if (isPathClear(start, end, board)) {
-        // check of destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, rook.pieceType)) {
+          if (Chess.getPieceAt(end) != null) {
+              removePieceFromBoard(end, board);
+          }
           return true;
         }
       }
@@ -136,11 +135,6 @@ public class LegalCheck {
   }
 
   private static boolean isLegalKnightMove(ReturnPiece knight, String start, String end, ArrayList<ReturnPiece> board) {
-    // parse again
-    if (!Chess.isMoveValidBasedOnColor(knight, end)) {
-      return false; // Invalid move based on piece color
-    }
-
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
@@ -149,48 +143,49 @@ public class LegalCheck {
     // if move is L shape (2x1 or 1x2)
     int fileDiff = Math.abs(startFile - endFile); 
     int rankDiff = Math.abs(startRank - endRank);
+
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
-      // check if destination square is empty
-      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType)) {
+      // check if the move is valid based on piece color
+      if (Chess.isMoveValidBasedOnColor(knight, end)) {
+        if (Chess.getPieceAt(end) != null) { // if there is an enemy piece at the destination
+            removePieceFromBoard(end, board); // remove that enemy piece
+        }
         return true;
+      }
+      else {
+        System.out.println("Invalid move based on piece color");
       }
     }
     return false;
-  }
+}
+
 
   private static boolean isLegalBishopMove(ReturnPiece bishop, String start, String end, ArrayList<ReturnPiece> board) {
-    
-    if (!Chess.isMoveValidBasedOnColor(bishop, end)) {
-      return false; // Invalid move based on piece color
-    }
-
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
-    // check if move is diagonal
     if (Math.abs(startFile - endFile) == Math.abs(startRank - endRank)) {
-      // if piece in the way
       if (isPathClear(start, end, board)) {
-        // check if destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType)) {
+          if (Chess.getPieceAt(end) != null) {
+              removePieceFromBoard(end, board);
+          }
           return true;
         }
       }
     }
     return false;
-  }
+  } 
 
   private static boolean isLegalQueenMove(ReturnPiece queen, String start, String end, ArrayList<ReturnPiece> board) {
-    if (!Chess.isMoveValidBasedOnColor(queen, end)) {
-      return false; // Invalid move based on piece color
-    }
-
     if (isLegalRookMove(queen, start, end, board) || isLegalBishopMove(queen, start, end, board)) {
+      if (Chess.getPieceAt(end) != null) {
+          removePieceFromBoard(end, board);
+      }
       return true;
     }
-
     return false;
   }
 
@@ -211,8 +206,10 @@ public class LegalCheck {
 
     //typical movement logic
     if (fileDiff <= 1 && rankDiff <= 1) {
-      // dest is empty
       if (!isSquareOccupiedBySameColor(end, board, king.pieceType)) {
+        if (Chess.getPieceAt(end) != null) {
+            removePieceFromBoard(end, board);
+        }
         return true;
       }
     }
@@ -239,7 +236,7 @@ public class LegalCheck {
     return false;
   }
 
-  private static boolean isSquareOccupiedBySameColor(String square, ArrayList<ReturnPiece> board,
+  public static boolean isSquareOccupiedBySameColor(String square, ArrayList<ReturnPiece> board,
       ReturnPiece.PieceType movingPieceType) {
     for (ReturnPiece piece : board) {
       if (square.equals(piece.pieceFile.name() + piece.pieceRank)) {
@@ -251,7 +248,7 @@ public class LegalCheck {
     return false;
 }
 
-  private static boolean isSquareOccupiedByOpponent(String position, ArrayList<ReturnPiece> board,
+  public static boolean isSquareOccupiedByOpponent(String position, ArrayList<ReturnPiece> board,
       ReturnPiece.PieceType currentPieceType) {
     for (ReturnPiece piece : board) {
       if ((piece.pieceFile.name() + piece.pieceRank).equals(position)) {
@@ -364,6 +361,17 @@ public class LegalCheck {
     }
 
     return legalMoves;
-}
-
+  }
+  public static void removePieceFromBoard(String position, ArrayList<ReturnPiece> board) {
+    ReturnPiece pieceToRemove = null;
+    for (ReturnPiece piece : board) {
+        if (position.equals(piece.pieceFile.name() + piece.pieceRank)) {
+            pieceToRemove = piece;
+            break;
+        }
+    }
+    if (pieceToRemove != null) {
+        board.remove(pieceToRemove);
+  }
+  }
 }
