@@ -60,30 +60,42 @@ public class ProcessMove {
 		// Save the piece at the target location
 		ReturnPiece pieceAtTarget = Chess.getPieceAt(moveTo);
 
+		// Remove the piece at the target location if it exists (capture)
+		if (pieceAtTarget != null) {
+			Chess.board.remove(pieceAtTarget);
+		}
+
 		//make move
 		Chess.movePiece(movingPiece, moveTo);
 
+		Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 		
 		// Check if the king is threatened after the move
-		if (Chess.isSquareAttacked(Chess.getKingPos(Chess.currentPlayer), Chess.board, movingPiece)) {
+		System.out.println("Current Player's King position: " + Chess.getKingPos(Chess.currentPlayer));
+		if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
+			System.out.println("King is targeted after move");
 			// If the king is in check, revert the move
 			Chess.movePiece(movingPiece, moveFrom); // Move the piece back
 			if (pieceAtTarget != null) {
 				Chess.board.add(pieceAtTarget); // Put the taken piece back
 			}
+			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 			return ReturnPlay.Message.ILLEGAL_MOVE;
 		}
 			
 
-
+		Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 
 		//check if opponent king is in check/checkmate after move
+		if (CheckMate.isInCheckMate(Chess.currentPlayer, Chess.board)) {
+		return (Chess.currentPlayer == Player.white) ? ReturnPlay.Message.CHECKMATE_WHITE_WINS : ReturnPlay.Message.CHECKMATE_BLACK_WINS;
+		}
 		if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
 			Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 			return ReturnPlay.Message.CHECK;
 		}
 
-		
+		Chess.hasMoved.put(movingPiece, true);
 
 
 

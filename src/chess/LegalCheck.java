@@ -133,11 +133,7 @@ public class LegalCheck {
       if (isPathClear(start, end, board)) {
         // check of destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, rook.pieceType)) {
-          if (Chess.isWhitePiece(rook.pieceType) == (Chess.currentPlayer == Player.white)){
-            ReturnPiece capturedPiece = Chess.getPieceAt(end);
-            //Chess.board.remove(capturedPiece);
             return true;
-          }
         }
       }
     }
@@ -160,9 +156,7 @@ public class LegalCheck {
     int rankDiff = Math.abs(startRank - endRank);
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
       // check if destination square is empty
-      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType) && Chess.isWhitePiece(knight.pieceType) == (Chess.currentPlayer == Player.white)) {
-          ReturnPiece capturedPiece = Chess.getPieceAt(end);
-          Chess.board.remove(capturedPiece);
+      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType)) {
           return true;
       }
     }
@@ -186,9 +180,7 @@ public class LegalCheck {
       // if piece in the way
       if (isPathClear(start, end, board)) {
         // check if destination square is empty
-        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType) && Chess.isWhitePiece(bishop.pieceType) == (Chess.currentPlayer == Player.white)) {
-          ReturnPiece capturedPiece = Chess.getPieceAt(end);
-          Chess.board.remove(capturedPiece);
+        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType)) {
           return true;
         }
       }
@@ -228,7 +220,9 @@ public class LegalCheck {
     if (fileDiff <= 1 && rankDiff <= 1) {
       // dest is empty
       if (!isSquareOccupiedBySameColor(end, board, king.pieceType)) {
-        return true;
+        if (isMoveSafeForKing(start, end, board)) {
+          return true;
+      }
       }
     }
 
@@ -241,6 +235,7 @@ public class LegalCheck {
           return true;
       }
     }
+
 
     return false;
   }
@@ -392,5 +387,29 @@ public class LegalCheck {
     if (pieceToRemove != null) {
         board.remove(pieceToRemove);
   }
+  }
+
+  public static boolean isMoveSafeForKing(String kingPosition, String targetPosition, ArrayList<ReturnPiece> board) {
+    // 1. Virtually move the king to the target position:
+    ReturnPiece king = Chess.getPieceAt(kingPosition);
+    ReturnPiece targetPiece = Chess.getPieceAt(targetPosition);
+    
+    // If there's a piece on the target square, temporarily remove it
+    if (targetPiece != null) {
+        board.remove(targetPiece);
+    }
+    
+    Chess.movePiece(king, targetPosition);
+    
+    // 2. Check if the king's new position is under attack by any opposing pieces:
+    boolean isSafe = !Chess.isSquareAttacked(targetPosition, board);
+    
+    // 3. Revert the virtual move:
+    Chess.movePiece(king, kingPosition);
+    if (targetPiece != null) {
+        board.add(targetPiece);
+    }
+    
+    return isSafe;
   }
 }

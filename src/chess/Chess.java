@@ -116,27 +116,21 @@ public class Chess {
 		//special pieces								file is letter, rank is number. Ex. pawn at a2 on board. a=file, 2=rank
 		addToBoard(PieceType.WR, PieceFile.a, 1); 
 		addToBoard(PieceType.WN, PieceFile.b, 1);
-		addToBoard(PieceType.WB, PieceFile.c, 1);
-		//addToBoard(PieceType.WQ, PieceFile.d, 1);
+		addToBoard(PieceType.WB, PieceFile.c, 5);
+		addToBoard(PieceType.WQ, PieceFile.d, 1);
 		addToBoard(PieceType.WK, PieceFile.e, 1);
-		//addToBoard(PieceType.WB, PieceFile.f, 1);
-		//addToBoard(PieceType.WN, PieceFile.g, 1);
-		//addToBoard(PieceType.WR, PieceFile.h, 1);
+		addToBoard(PieceType.WB, PieceFile.f, 1);
+		addToBoard(PieceType.WN, PieceFile.g, 1);
+		addToBoard(PieceType.WR, PieceFile.h, 1);
 
-		//addToBoard(PieceType.BR, PieceFile.a, 8);
-		//addToBoard(PieceType.BN, PieceFile.b, 8);
-		//addToBoard(PieceType.BB, PieceFile.c, 8);
-		//addToBoard(PieceType.BQ, PieceFile.d, 8);
+		addToBoard(PieceType.BR, PieceFile.a, 8);
+		addToBoard(PieceType.BN, PieceFile.b, 8);
+		addToBoard(PieceType.BB, PieceFile.c, 5);
+		addToBoard(PieceType.BQ, PieceFile.f, 6);
 		addToBoard(PieceType.BK, PieceFile.e, 8);
-		//addToBoard(PieceType.BB, PieceFile.f, 8);
-		//addToBoard(PieceType.BN, PieceFile.g, 8);
-		//addToBoard(PieceType.BR, PieceFile.h, 8);
-
-		//addToBoard(PieceType.BP, PieceFile.a, 3);
-		addToBoard(PieceType.BP, PieceFile.b, 3);
-		addToBoard(PieceType.BP, PieceFile.c, 3);
-		addToBoard(PieceType.BP, PieceFile.e, 3);
-		addToBoard(PieceType.BP, PieceFile.f, 3);
+		addToBoard(PieceType.BB, PieceFile.f, 8);
+		addToBoard(PieceType.BN, PieceFile.g, 8);
+		addToBoard(PieceType.BR, PieceFile.h, 8);
 
 		// pawns
 		for (PieceFile file : PieceFile.values()) {
@@ -173,7 +167,6 @@ public class Chess {
 
 	//already checked if piece is null
 	public static void movePiece(ReturnPiece piece, String moveTo) {
-		hasMoved.put(piece, true);
 		lastMove = piece.pieceFile.name() + piece.pieceRank + " " + moveTo; // Store the last move
 		piece.pieceFile = PieceFile.valueOf(String.valueOf(moveTo.charAt(0)));
 		piece.pieceRank = Character.getNumericValue(moveTo.charAt(1));
@@ -215,6 +208,22 @@ public class Chess {
 		return false;
 		}		
 	
+		public static boolean isSquareAttacked(String targetPosition, ArrayList<ReturnPiece> board) {
+			for (ReturnPiece piece : board) {
+				// If it's the same color as the king we're checking, skip this piece.
+				if (Chess.isWhitePiece(piece.pieceType) == Chess.isWhitePiece(Chess.getPieceAt(targetPosition).pieceType)) {
+					continue;
+				}
+				
+				// Check if the opposing piece can attack the target position.
+				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + targetPosition, board)) {
+					System.out.println("Piece " + piece.pieceType + " at " + piece.pieceFile + piece.pieceRank + " can attack " + targetPosition);
+					return true;
+				}
+			}
+			return false;
+		}
+
 	private static boolean isPieceSameColor(ReturnPiece threatPiece, ReturnPiece movingPiece) {
 		
 		if (movingPiece == null || threatPiece == null) {
@@ -227,9 +236,9 @@ public class Chess {
 	public static String getKingPos(Player opposingPlayer) {
 		for (ReturnPiece piece : board) {
 			if (piece.pieceType.name().charAt(1) == 'K') { // Checking if the piece is a King
-				if (isWhitePiece(piece.pieceType) && opposingPlayer == Player.white) { // If it's a white king and we want the black king
+				if (isWhitePiece(piece.pieceType) && opposingPlayer == Player.black) { // If it's a white king and we want the black king
 					continue;
-				} else if (!isWhitePiece(piece.pieceType) && opposingPlayer == Player.black) { // If it's a black king and we want the white king
+				} else if (!isWhitePiece(piece.pieceType) && opposingPlayer == Player.white) { // If it's a black king and we want the white king
 					continue;
 				}
 				return piece.pieceFile.name() + piece.pieceRank;  // Return the found king's position

@@ -20,6 +20,7 @@ public class Check {
             System.out.println("Opposing king at " + opposingKingPosition);
         }else{
             opposingKingPosition = Chess.getWhiteKingPos();
+            System.out.println("Opposing king at " + opposingKingPosition);
         }
         
         
