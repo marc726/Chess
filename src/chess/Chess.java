@@ -1,6 +1,6 @@
 /*
  * Authors:
- *  		* Marcc Rizzolo (NETID)
+ *  		* Marc Rizzolo (mtr120)
  * 		    * Bhavya Patel (bsp75)
  */
 package chess;
