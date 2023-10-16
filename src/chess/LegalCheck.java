@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
+import chess.Chess.Player;
 import chess.ReturnPiece.PieceType;
 
 public class LegalCheck {
@@ -132,9 +133,11 @@ public class LegalCheck {
       if (isPathClear(start, end, board)) {
         // check of destination square is empty
         if (!isSquareOccupiedBySameColor(end, board, rook.pieceType)) {
-          ReturnPiece capturedPiece = Chess.getPieceAt(end);
-          Chess.board.remove(capturedPiece);
-          return true;
+          if (Chess.isWhitePiece(rook.pieceType) == (Chess.currentPlayer == Player.white)){
+            ReturnPiece capturedPiece = Chess.getPieceAt(end);
+            //Chess.board.remove(capturedPiece);
+            return true;
+          }
         }
       }
     }
@@ -157,8 +160,10 @@ public class LegalCheck {
     int rankDiff = Math.abs(startRank - endRank);
     if ((fileDiff == 1 && rankDiff == 2) || (fileDiff == 2 && rankDiff == 1)) {
       // check if destination square is empty
-      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType)) {
-        return true;
+      if (!isSquareOccupiedBySameColor(end, board, knight.pieceType) && Chess.isWhitePiece(knight.pieceType) == (Chess.currentPlayer == Player.white)) {
+          ReturnPiece capturedPiece = Chess.getPieceAt(end);
+          Chess.board.remove(capturedPiece);
+          return true;
       }
     }
     return false;
@@ -181,7 +186,9 @@ public class LegalCheck {
       // if piece in the way
       if (isPathClear(start, end, board)) {
         // check if destination square is empty
-        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType)) {
+        if (!isSquareOccupiedBySameColor(end, board, bishop.pieceType) && Chess.isWhitePiece(bishop.pieceType) == (Chess.currentPlayer == Player.white)) {
+          ReturnPiece capturedPiece = Chess.getPieceAt(end);
+          Chess.board.remove(capturedPiece);
           return true;
         }
       }
