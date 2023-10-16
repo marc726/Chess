@@ -17,10 +17,8 @@ public class Check {
         String opposingKingPosition;
         if (currentPlayer.equals(Chess.Player.white)) {
             opposingKingPosition = Chess.getBlackKingPos();
-            System.out.println("Opposing king at " + opposingKingPosition);
         }else{
             opposingKingPosition = Chess.getWhiteKingPos();
-            System.out.println("Opposing king at " + opposingKingPosition);
         }
         
         

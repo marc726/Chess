@@ -39,22 +39,17 @@ public class Castle {
         String kingPosition = move.substring(0, 2);
         String endPosition = move.substring(3, 5);
         
-        ReturnPiece king = Chess.getPieceAt(kingPosition);
-        System.out.println("King: " + king.pieceType.name() + " at " + kingPosition);
-        
+        ReturnPiece king = Chess.getPieceAt(kingPosition);        
         if (Chess.hasMoved(king)) {
-            System.out.println("King has moved");
             return false;
         }
         
         // Check if the squares between the king and the rook are empty
         if (endPosition.equals("g1") || endPosition.equals("g8")) {
             if (Chess.getPieceAt("f" + king.pieceRank) != null || Chess.getPieceAt("g" + king.pieceRank) != null) {
-                System.out.println("Squares between king and rook are not empty");
                 return false;
             }
             if (Chess.hasMoved(Chess.getPieceAt("h" + king.pieceRank))) {
-                System.out.println("Rook has moved");
                 return false;
             }
         }
@@ -64,7 +59,6 @@ public class Castle {
                 return false;
             }
             if (Chess.hasMoved(Chess.getPieceAt("a" + king.pieceRank))) {
-                System.out.println("Rook has moved");
                 return false;
             }
         }

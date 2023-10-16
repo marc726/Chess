@@ -10,7 +10,6 @@ public class ProcessMove {
 
     public static ReturnPlay.Message processMove(String move) {
 
-		System.out.println("Current player: " + Chess.currentPlayer);
 		String moveFrom = move.substring(0, 2);
 		String moveTo = move.substring(3, 5);
 		ReturnPiece movingPiece = Chess.getPieceAt(moveFrom);
@@ -71,9 +70,7 @@ public class ProcessMove {
 		Chess.currentPlayer = (Chess.currentPlayer == Player.white) ? Player.black : Player.white;
 		
 		// Check if the king is threatened after the move
-		System.out.println("Current Player's King position: " + Chess.getKingPos(Chess.currentPlayer));
 		if (Check.isInCheck(Chess.currentPlayer, Chess.board)) {
-			System.out.println("King is targeted after move");
 			// If the king is in check, revert the move
 			Chess.movePiece(movingPiece, moveFrom); // Move the piece back
 			if (pieceAtTarget != null) {

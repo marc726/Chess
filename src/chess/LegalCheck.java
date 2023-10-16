@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 
-import chess.Chess.Player;
 import chess.ReturnPiece.PieceType;
 
 public class LegalCheck {
@@ -12,7 +11,6 @@ public class LegalCheck {
     // Parse move
     String startPos = move.substring(0, 2);
     String endPos = move.substring(3, 5);
-    //System.out.println("Checking if " + startPos + " to " + endPos + " is legal");
     // Get piece that is moving
     ReturnPiece movingPiece = null;
     for (ReturnPiece piece : board) {
@@ -67,20 +65,16 @@ public class LegalCheck {
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
 
-    //System.out.println(endFile + " " + endRank + " " + startFile + " " + startRank);
-    //System.out.println("startFile - endFile = " + (startFile - endFile));
 
     if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
       // Check for normal capture
       if (isSquareOccupiedByOpponent(end, board, pawn.pieceType)) {
           // Also, remove the captured piece
           ReturnPiece capturedPiece = Chess.getPieceAt(end);
-          System.out.println("Captured piece: " + capturedPiece.pieceType);
           Chess.board.remove(capturedPiece);
           return true;
       }
       // Check for en passant
-      System.out.println("Checking for en passant");
       if (EnPassant.canEnPassant(pawn, end)) {
         // Also, remove the pawn being captured en passant
         ReturnPiece capturedPawn = Chess.getPieceAt(String.valueOf(endFile) + startRank);

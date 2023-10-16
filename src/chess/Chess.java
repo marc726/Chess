@@ -222,7 +222,6 @@ public class Chess {
 				
 				// Check if the opposing piece can attack the target position.
 				if (LegalCheck.isLegalMove(piece.pieceFile.name() + piece.pieceRank + " " + targetPosition, board)) {
-					System.out.println("Piece " + piece.pieceType + " at " + piece.pieceFile + piece.pieceRank + " can attack " + targetPosition);
 					return true;
 				}
 			}
