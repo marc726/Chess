@@ -1,8 +1,7 @@
 package chess;
-
 import java.util.ArrayList;
-
 import chess.ReturnPiece.PieceType;
+
 
 public class LegalCheck {
 
@@ -21,7 +20,6 @@ public class LegalCheck {
     }
 
     // Check if move is legal for that piece
-
     if (movingPiece != null) {
       switch (movingPiece.pieceType) {
         case WP:
@@ -59,12 +57,12 @@ public class LegalCheck {
     // Direction of the move depends on the piece color
     int direction = (pawn.pieceType == PieceType.WP) ? 1 : -1;
 
+
     // Parse the file (column) and rank (row) of the start and end positions
     char startFile = start.charAt(0);
     char endFile = end.charAt(0);
     int startRank = Character.getNumericValue(start.charAt(1));
     int endRank = Character.getNumericValue(end.charAt(1));
-
 
     if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
       // Check for normal capture
@@ -299,8 +297,54 @@ public class LegalCheck {
         if (isSquareOccupied(Character.toString(file) + startRank, board)) { // rank doesn't change since horizontal
           return false;
         }
+=======
+    // One Square Forward - Reg Pawn
+    if (startFile == endFile && endRank == startRank + direction) {
+      // check oif destination square is empty
+      if (!isSquareOccupied(end, Chess.board)) {
+        return true;
       }
+    }
 
+    // Initial pawn move: two squares forward from the starting position
+    if (startFile == endFile && endRank == startRank + 2 * direction) {
+      // Check if both the destination square and the square in between are empty
+      String intermediateSquare = String.valueOf(startFile) + (startRank + direction);
+      if (!isSquareOccupied(intermediateSquare, Chess.board) && !isSquareOccupied(end, Chess.board)) {
+        return true;
+      }
+    }
+    // Pawn capturing moves: diagonal
+    if (Math.abs(startFile - endFile) == 1 && endRank == startRank + direction) {
+      // Check if the destination square contains an opponent's piece
+      if (isSquareOccupiedByOpponent(end, Chess.board, pawn.pieceType)) {
+        return true;
+
+      }
+    }
+    return false;
+  }
+
+  // Helper methods
+
+  private static boolean isSquareOccupied(String position, ArrayList<ReturnPiece> board) {
+    for (ReturnPiece piece : board) {
+      if (piece.pieceFile.name() + piece.pieceRank == position) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean isPathClear(String start, String end, ArrayList<ReturnPiece> board) {
+    // Implement logic to check if the path between two positions is clear of pieces
+    // Return true if the path is clear, otherwise return false
+  }
+
+  private static boolean isLegalRookMove(ReturnPiece rook, String start, String end) {
+    // Rook move rules
+  }
+      
       // vertical
     } else if (startFile == endFile) {
 
@@ -382,6 +426,7 @@ public class LegalCheck {
         board.remove(pieceToRemove);
   }
   }
+
 
   public static boolean isMoveSafeForKing(String kingPosition, String targetPosition, ArrayList<ReturnPiece> board) {
     // 1. Virtually move the king to the target position:
